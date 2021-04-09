@@ -18,16 +18,14 @@ function! chezmoi#filetype#handle_chezmoi_filetype() abort
   if exists('g:chezmoi#detect_ignore_pattern') &&
       \ original_abs_path =~# g:chezmoi#detect_ignore_pattern
     return
-  " elseif original_abs_path =~# '\v%(^|/)\.chezmoi%(ignore|remove)$'
   elseif original_abs_path =~# s:special_dir_patterns['ignore_remove']
     let b:chezmoi_target_path = original_abs_path
 
-    "setlocal filetype=chezmoitmpl
     setfiletype chezmoitmpl
-  " elseif original_abs_path =~# '\v%(^|/)\.chezmoitemplates/.+'
   elseif original_abs_path =~# s:special_dir_patterns['templates']
     call chezmoi#filetype#handle_chezmoitemplates_file(original_abs_path)
-  " elseif original_abs_path =~# '\v%([^/]*/)*chezmoi/%([^/]+/){-}\.'
+  elseif original_abs_path =~# s:special_dir_patterns['config']
+    call chezmoi#filetype#handle_managed_file(original_abs_path)
   elseif original_abs_path =~# s:special_dir_patterns['other_dot_items']
    return
   else
@@ -45,11 +43,12 @@ endfunction
 function! s:get_special_dir_patterns()
   " g:chezmoi#source_dir_path should be defined in /filetype.vim
   let dir_prefix = '^' . g:chezmoi#source_dir_path . '/\v'
-  return #{
-      \ ignore_remove: dir_prefix . '\.chezmoi%(ignore|remove)$',
-      \ templates: dir_prefix . '\.chezmoitemplates/.+',
-      \ other_dot_items: dir_prefix . '%([^/]+/){-}\.'
-    \ }
+  let patterns = {}
+  let patterns.ignore_remove = dir_prefix . '\.chezmoi%(ignore|remove)$'
+  let patterns.templates = dir_prefix . '\.chezmoitemplates/.+'
+  let patterns.config = dir_prefix . '\.chezmoi\.%(json|yaml|toml|hcl|plist|properties)\.tmpl$'
+  let patterns.other_dot_items = dir_prefix . '%([^/]+/){-}\.'
+  return patterns
 endfunction
 
 function! chezmoi#filetype#handle_chezmoitemplates_file(original_abs_path)
