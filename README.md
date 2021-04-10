@@ -4,7 +4,7 @@ This plugin adds the support for your editing dotfiles in [chezmoi](https://gith
 
 ## Why
 
-[chezmoi](https://github.com/twpayne/chezmoi) gives your very good experience of managing your dotfiles. However, text editor's syntax highlight does not work correctly because chezmoi manages your files via special file naming (e.g. `dot_bashrc`). This plugin solves this problem.
+[chezmoi](https://github.com/twpayne/chezmoi) makes it much easier for you to manage your dotfiles. However, most of text editors do not enable syntax highlighting correctly because chezmoi manages your files by using special file naming (e.g. `dot_bashrc`). This plugin solves this problem.
 
 ## Features
 
@@ -12,11 +12,11 @@ This plugin makes vim treat the files to be edited as follows:
 * `dot_bashrc` => `.bashrc`
 * `dot_config/git/private_config` => `.config/git/config`
 
-Furthermore, **with keeping original syntax highlight**, this plugin applies `go-template`'s highlight for chezmoi's template files (e.g. `dot_vimrc.tmpl`).
+Furthermore, **with keeping original highlighting**, this plugin applyes `go-template`'s one to chezmoi's template files (e.g. `dot_vimrc.tmpl`).
 
 ## Install
 
-:warning: You must load this plugin before the following timings:
+:warning: Notes: You must load this plugin before the following timings:
 * Calling `filetype on`, `syntax enable` or `syntax on`
 * Loading other plugins that include `filetype.vim`
 * End of `vimrc`
@@ -35,20 +35,20 @@ You can also use the favorite plugin manager, in that case, make your plugin man
 
 ## Usege
 
-Just run this:
+As always, just run this:
 ```sh
 $ chezmoi edit ~/.bashrc
 # or
 $ chezmoi cd
 $ vim dot_bashrc
 ```
-This plugin resolves the special prefixes automatically therefore `bash`'s syntax highlight is applied correctly.
+This plugin resolves the special prefixes automatically therefore `bash`'s highlighting is applied correctly.
 
-If the file is chezmoi template, the syntax highlight is merged as follows:
-* `dot_vimrc.tmpl` => `vim` + `template`
-* `.chezmoitemplates/foo.toml` => `toml` + `template`
+If the file is chezmoi template, this plugin merge syntax highlighting as follows:
+* `dot_vimrc.tmpl` => `vim` + `go template`
+* `.chezmoitemplates/foo.toml` => `toml` + `go template`
 
 ## License
-The MIT License but includes the files of the BSD License.
+The MIT License but includes works of the BSD License.
 
 See [LICENSE](LICENSE) and [vendor/vim-go/LICENSE](vendor/vim-go/LICENSE) for more details.
