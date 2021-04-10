@@ -12,7 +12,7 @@ This plugin makes vim treat the files to be edited as follows:
 * `dot_bashrc` => `.bashrc`
 * `dot_config/git/private_config` => `.config/git/config`
 
-Furthermore, **with keeping original highlighting**, this plugin applyes `go-template`'s one to chezmoi's template files (e.g. `dot_vimrc.tmpl`).
+Furthermore, **with keeping original highlighting**, this plugin applies `go-template`'s highlighting to chezmoi's template files (e.g. `dot_vimrc.tmpl`).
 
 ## Install
 
