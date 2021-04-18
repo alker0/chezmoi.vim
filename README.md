@@ -1,6 +1,26 @@
-# chezmoi.vim
+<div align="center">
+<h1><strong>chezmoi.vim</strong></h1>
 
-This plugin adds the support for your editing dotfiles in [chezmoi](https://github.com/twpayne/chezmoi) source path.
+<strong>This plugin adds the support for your editing dotfiles in <a href="https://github.com/twpayne/chezmoi">chezmoi</a> source path.</strong>
+</div>
+
+<br>
+
+<div align="center"><p>Resolving a file that has <code>dot_</code> prefix</p></div>
+
+![chezmoi-vim-resolve](https://user-images.githubusercontent.com/51204827/115132447-1a519180-a03b-11eb-9b17-54328cb52aae.gif)
+
+<div align="center"><p>Highlighting a template file</p></div>
+
+![chezmoi-vim-template](https://user-images.githubusercontent.com/51204827/115132449-1aea2800-a03b-11eb-91bf-ea523f6e56a0.png)
+
+# Table of contents
+
+- [Why](#why)
+- [Features](#features)
+- [Install](#install)
+- [Usage](#usage)
+- [License](#license)
 
 # Why
 
