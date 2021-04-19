@@ -8,7 +8,7 @@
 
 <div align="center"><p>Resolving a file that has <code>dot_</code> prefix</p></div>
 
-![chezmoi-vim-resolve](https://user-images.githubusercontent.com/51204827/115132447-1a519180-a03b-11eb-9b17-54328cb52aae.gif)
+![chezmoi-vim-resolve](https://user-images.githubusercontent.com/51204827/115167010-cdc88d80-a0f0-11eb-8678-97e4ced4f7cc.gif)
 
 <div align="center"><p>Highlighting a template file</p></div>
 
