@@ -31,7 +31,7 @@ This plugin makes vim treat the files to be edited as follows:
 * `dot_bashrc` => `.bashrc`
 * `dot_config/git/private_config` => `.config/git/config`
 
-Furthermore, **with keeping original highlighting**, this plugin applies highlighting for `go-template` to template files (e.g. `dot_vimrc.tmpl`).
+Furthermore, **with keeping original highlighting**, this plugin applies that of `go-template` to template files (e.g. `dot_vimrc.tmpl`).
 
 # Install
 
@@ -45,7 +45,7 @@ If you use [Vim 8 packages](http://vimhelp.appspot.com/repeat.txt.html#packages)
 ```sh
 $ git clone https://github.com/alker0/chezmoi.vim ~/.vim/pack/plugins/opt/chezmoi.vim
 ```
-And then instert this line your `vimrc` with taking the above notes into consideration:
+And then insert this line your `vimrc` with taking the above notes into consideration:
 ```vim
 packadd chezmoi.vim
 ```
