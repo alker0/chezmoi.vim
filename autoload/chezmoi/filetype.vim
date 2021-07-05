@@ -115,7 +115,7 @@ function! s:get_fixed_name(original_name) abort
   endif
 
   return substitute(a:original_name,
-    \ '\C\v^' . s:name_prefix_pattern . '|\.tmpl$', '', 'g')
+    \ '\C\v^' . s:name_prefix_pattern . '|%(\.literal)?%(\.tmpl)?$', '', 'g')
 endfunction
 
 function! s:get_fixed_dir(original_abs_path) abort
