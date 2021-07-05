@@ -9,7 +9,7 @@
 <div align="center"><p>Resolving <code>dot_</code> prefix</p>
 <img src="https://user-images.githubusercontent.com/51204827/115167010-cdc88d80-a0f0-11eb-8678-97e4ced4f7cc.gif" alt="resolving path demo" height="400px">
 
-<br>
+<p><br></p>
 
 <p>Highlighting a template file</p>
 <img src="https://user-images.githubusercontent.com/51204827/115132449-1aea2800-a03b-11eb-91bf-ea523f6e56a0.png" alt="highlighting a template demo">
