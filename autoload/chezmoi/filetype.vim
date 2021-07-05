@@ -11,24 +11,24 @@ function! chezmoi#filetype#handle_chezmoi_filetype() abort
   call s:reset_buf_vars()
   let original_abs_path = expand('<amatch>:p')
 
-  if !exists('s:special_dir_patterns')
-    let s:special_dir_patterns = s:get_special_dir_patterns()
+  if !exists('s:special_path_patterns')
+    let s:special_path_patterns = s:get_special_path_patterns()
   endif
 
   if exists('g:chezmoi#detect_ignore_pattern') &&
       \ original_abs_path =~# g:chezmoi#detect_ignore_pattern
     return
-  elseif original_abs_path =~# s:special_dir_patterns['ignore_remove']
+  elseif original_abs_path =~# s:special_path_patterns['ignore_remove']
     let b:chezmoi_target_path = original_abs_path
 
     setfiletype chezmoitmpl
-  elseif original_abs_path =~# s:special_dir_patterns['templates']
+  elseif original_abs_path =~# s:special_path_patterns['templates']
     call chezmoi#filetype#handle_chezmoitemplates_file(original_abs_path)
-  elseif original_abs_path =~# s:special_dir_patterns['data']
+  elseif original_abs_path =~# s:special_path_patterns['data']
     call chezmoi#filetype#handle_managed_file(original_abs_path)
-  elseif original_abs_path =~# s:special_dir_patterns['config']
+  elseif original_abs_path =~# s:special_path_patterns['config']
     call chezmoi#filetype#handle_managed_file(original_abs_path)
-  elseif original_abs_path =~# s:special_dir_patterns['other_dot_items']
+  elseif original_abs_path =~# s:special_path_patterns['other_dot_items']
    return
   else
     call chezmoi#filetype#handle_managed_file(original_abs_path)
@@ -42,7 +42,7 @@ function! s:reset_buf_vars()
   unlet! b:chezmoi_original_syntax
 endfunction
 
-function! s:get_special_dir_patterns()
+function! s:get_special_path_patterns()
   " g:chezmoi#source_dir_path should be defined in /filetype.vim
   let dir_prefix = '^' . g:chezmoi#source_dir_path . '/\v'
   let patterns = {}
