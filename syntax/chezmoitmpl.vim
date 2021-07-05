@@ -9,7 +9,7 @@ source <sfile>:h/gotmpl.vim
 syn keyword chezmoiTmplHelperFunctions contained bitwarden bitwardenAttachment bitwardenFields gitHubKeys gopass gopassRaw include ioreg joinPath
 syn keyword chezmoiTmplHelperFunctions contained keepassxc keepassxcAttribute keyring lastpass lastpassRaw lookPath mozillaInstallHash
 syn keyword chezmoiTmplHelperFunctions contained onepassword onepasswordDocument onepasswordDetailsFields output pass passRaw
-syn keyword chezmoiTmplHelperFunctions contained promptBool promptInt promptString secret secretJSON stat stdinIsATTY vault writeToStdOut
+syn keyword chezmoiTmplHelperFunctions contained promptBool promptInt promptString secret secretJSON stat stdinIsATTY vault writeToStdout
 
 hi def link chezmoiTmplHelperFunctions Function
 
