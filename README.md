@@ -6,8 +6,10 @@
 
 <br>
 
-<div align="center"><p>Resolving a file that has <code>dot_</code> prefix</p>
+<div align="center"><p>Resolving <code>dot_</code> prefix</p>
 <img src="https://user-images.githubusercontent.com/51204827/115167010-cdc88d80-a0f0-11eb-8678-97e4ced4f7cc.gif" alt="resolving path demo" height="400px">
+
+<br>
 
 <p>Highlighting a template file</p>
 <img src="https://user-images.githubusercontent.com/51204827/115132449-1aea2800-a03b-11eb-91bf-ea523f6e56a0.png" alt="highlighting a template demo">
@@ -63,7 +65,7 @@ $ vim dot_bashrc
 ```
 This plugin resolves the special prefixes automatically therefore highlighting for bash is applied correctly.
 
-If the file is chezmoi template, this plugin merge syntax highlighting as follows:
+If the file is chezmoi template, this plugin merges syntax highlighting as follows:
 * `dot_vimrc.tmpl` => `vim` + `go-template`
 * `.chezmoitemplates/foo.toml` => `toml` + `go-template`
 
