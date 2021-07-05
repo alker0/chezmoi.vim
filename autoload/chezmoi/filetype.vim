@@ -74,8 +74,9 @@ function! chezmoi#filetype#handle_managed_file(original_abs_path)
     return
   endif
 
-  let only_dot_prefix = s:get_fixed_dir(a:original_abs_path) . '/' . fixed_name
-  let b:chezmoi_target_path = substitute(only_dot_prefix, '\C/\zsdot_', '.', 'g')
+  let until_dot_prefix = s:get_fixed_dir(a:original_abs_path) . '/' . fixed_name
+  let until_literal_prefix = substitute(until_dot_prefix, '\C/\zsdot_', '.', 'g')
+  let b:chezmoi_target_path = substitute(until_literal_prefix, '\C/\zsliteral_', '', 'g')
 
   call s:handle_fixed_path(a:original_abs_path, b:chezmoi_target_path)
 endfunction
@@ -120,7 +121,7 @@ endfunction
 
 function! s:get_fixed_dir(original_abs_path) abort
   return substitute(fnamemodify(a:original_abs_path, ':h'),
-    \ '\C\v/\zs%(exact_)?%(private_)?', '', 'g')
+    \ '\C\v/\zs%(exact_)?%(private_)?\ze%(literal_)?', '', 'g')
 endfunction
 
 let &cpo = s:cpo_save
