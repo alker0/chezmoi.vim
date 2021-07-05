@@ -24,6 +24,8 @@ function! chezmoi#filetype#handle_chezmoi_filetype() abort
     setfiletype chezmoitmpl
   elseif original_abs_path =~# s:special_dir_patterns['templates']
     call chezmoi#filetype#handle_chezmoitemplates_file(original_abs_path)
+  elseif original_abs_path =~# s:special_dir_patterns['data']
+    call chezmoi#filetype#handle_managed_file(original_abs_path)
   elseif original_abs_path =~# s:special_dir_patterns['config']
     call chezmoi#filetype#handle_managed_file(original_abs_path)
   elseif original_abs_path =~# s:special_dir_patterns['other_dot_items']
@@ -46,6 +48,7 @@ function! s:get_special_dir_patterns()
   let patterns = {}
   let patterns.ignore_remove = dir_prefix . '\.chezmoi%(ignore|remove)$'
   let patterns.templates = dir_prefix . '\.chezmoitemplates/.+'
+  let patterns.data = dir_prefix . '\.chezmoidata\.%(json|yaml|toml)$'
   let patterns.config = dir_prefix . '\.chezmoi\.%(json|yaml|toml|hcl|plist|properties)\.tmpl$'
   let patterns.other_dot_items = dir_prefix . '%([^/]+/){-}\.'
   return patterns
