@@ -6,9 +6,10 @@ unlet! b:current_syntax
 
 source <sfile>:h/gotmpl.vim
 
-syn keyword chezmoiTmplHelperFunctions contained bitwarden bitwardenAttachment bitwardenFields gitHubKeys gopass include ioreg joinPath keepassxc keepassxcAttribute keyring
-syn keyword chezmoiTmplHelperFunctions contained lastpass lastpassRaw lookPath onepassword onepasswordDocument onepasswordDetailsFields output
-syn keyword chezmoiTmplHelperFunctions contained pass promptBool promptInt promptString secret secretJSON stat stdinIsATTY vault
+syn keyword chezmoiTmplHelperFunctions contained bitwarden bitwardenAttachment bitwardenFields gitHubKeys gopass gopassRaw include ioreg joinPath
+syn keyword chezmoiTmplHelperFunctions contained keepassxc keepassxcAttribute keyring lastpass lastpassRaw lookPath mozillaInstallHash
+syn keyword chezmoiTmplHelperFunctions contained onepassword onepasswordDocument onepasswordDetailsFields output pass passRaw
+syn keyword chezmoiTmplHelperFunctions contained promptBool promptInt promptString secret secretJSON stat stdinIsATTY vault writeToStdout
 
 hi def link chezmoiTmplHelperFunctions Function
 
