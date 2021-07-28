@@ -11,7 +11,7 @@ if !exists('g:chezmoi#source_dir_path')
   endif
 endif
 
-augroup filetypedetect
+augroup chezmoi_filetypedetect
   autocmd!
 
   execute 'autocmd BufNewFile,BufRead '. g:chezmoi#source_dir_path . '/* call chezmoi#filetype#handle_chezmoi_filetype()'
