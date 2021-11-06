@@ -1,5 +1,7 @@
 let s:cpo_save = &cpo
+" enable line continuation
 set cpo-=C
+" enable special characters by backslash(\) in [] of regex
 set cpo-=l
 set cpo-=\
 
