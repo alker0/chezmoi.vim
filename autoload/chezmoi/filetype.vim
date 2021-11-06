@@ -105,8 +105,8 @@ function! s:handle_fixed_path(original_path, fixed_path)
 endfunction
 
 function! s:get_name_prefix_pattern()
-  let prefix_list = ['run', 'create', 'modify', 'before', 'after',
-    \ 'private', 'empty', 'executable', 'symlink', 'once']
+  let prefix_list = ['create', 'modify', 'remove', 'run', 'encrypted', 'private', 'readonly',
+    \ 'executable', 'once', 'onchange', 'before', 'after', 'symlink', 'empty']
   return join(map(prefix_list, '"%(" . v:val . "_)?"'), '')
 endfunction
 
@@ -121,7 +121,7 @@ endfunction
 
 function! s:get_fixed_dir(original_abs_path) abort
   return substitute(fnamemodify(a:original_abs_path, ':h'),
-    \ '\C\v/\zs%(exact_)?%(private_)?\ze%(literal_)?', '', 'g')
+    \ '\C\v/\zs%(exact_)?%(private_)?%(readonly_)?\ze%(literal_)?', '', 'g')
 endfunction
 
 let &cpo = s:cpo_save
