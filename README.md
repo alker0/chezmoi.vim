@@ -21,6 +21,7 @@
 - [Features](#features)
 - [Install](#install)
 - [Usage](#usage)
+- [Options](#options)
 - [License](#license)
 
 # Why
@@ -68,6 +69,13 @@ This plugin resolves the special prefixes automatically therefore highlighting f
 If the file is chezmoi template, this plugin merges syntax highlighting as follows:
 * `dot_vimrc.tmpl` => `vim` + `go-template`
 * `.chezmoitemplates/foo.toml` => `toml` + `go-template`
+
+# Options
+| Flag                              | Default                                                  | Description                                            |
+| --------------------------------- | -------------------------------------------------------- | ----------------------------------------------         |
+| `g:chezmoi#loaded`                | 0                                                        | Setting 1 before loading disables this plugin          |
+| `g:chezmoi#detect_ignore_pattern` | \<empty string>                                          | Regex pattern of path for ignoring file type detection |
+| `g:chezmoi#source_dir_path`       | `$XDG_DATA_HOME/chezmoi` or `$HOME/.local/share/chezmoi` | Source Directory managed by chezmoi                    |
 
 # License
 The MIT License but includes works of the BSD License.
