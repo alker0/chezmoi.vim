@@ -6,14 +6,14 @@ unlet! b:current_syntax
 
 source <sfile>:h/gotmpl.vim
 
-syn keyword chezmoiTmplHelperFunctions contained bitwarden bitwardenAttachment bitwardenFields decrypt encrypt fromJson gitHubKeys gopass gopassRaw
-syn keyword chezmoiTmplHelperFunctions contained include ioreg joinPath keepassxc keepassxcAttribute keyring lastpass lastpassRaw lookPath mozillaInstallHash
-syn keyword chezmoiTmplHelperFunctions contained onepassword onepasswordDocument onepasswordDetailsFields onepasswordItemFields output pass passRaw
-syn keyword chezmoiTmplHelperFunctions contained promptBool promptInt promptString secret secretJSON stat stdinIsATTY vault writeToStdout
+syn keyword chezmoiTmplFunctions contained bitwarden bitwardenAttachment bitwardenFields decrypt encrypt exit fromJson fromYaml gitHubKeys gitHubLatestRelease
+syn keyword chezmoiTmplFunctions contained gopass gopassRaw include ioreg joinPath keepassxc keepassxcAttribute keyring lastpass lastpassRaw lookPath
+syn keyword chezmoiTmplFunctions contained mozillaInstallHash onepassword onepasswordDocument onepasswordDetailsFields onepasswordItemFields output
+syn keyword chezmoiTmplFunctions contained pass passRaw promptBool promptInt promptString secret secretJSON stat stdinIsATTY toYaml vault writeToStdout
 
-hi def link chezmoiTmplHelperFunctions Function
+hi def link chezmoiTmplFunctions Function
 
-syn cluster goTmplItems add=chezmoiTmplHelperFunctions
+syn cluster goTmplItems add=chezmoiTmplFunctions
 
 if exists('b:chezmoi_original_syntax')
   let b:current_syntax = b:chezmoi_original_syntax . '+chezmoitmpl'
