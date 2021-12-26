@@ -30,7 +30,7 @@ function! chezmoi#filetype#handle_chezmoi_filetype() abort
     call chezmoi#filetype#handle_managed_file(original_abs_path)
   elseif original_abs_path =~# s:special_path_patterns['config']
     call chezmoi#filetype#handle_managed_file(original_abs_path)
-  elseif original_abs_path =~# s:special_path_patterns['other_dot_items']
+  elseif original_abs_path =~# s:special_path_patterns['other_dot_path']
    return
   else
     call chezmoi#filetype#handle_managed_file(original_abs_path)
@@ -52,7 +52,7 @@ function! s:get_special_path_patterns()
   let patterns.templates = dir_prefix . '\.chezmoitemplates/.+'
   let patterns.data = dir_prefix . '\.chezmoidata\.%(json|yaml|toml)$'
   let patterns.config = dir_prefix . '\.chezmoi\.%(json|yaml|toml|hcl|plist|properties)\.tmpl$'
-  let patterns.other_dot_items = dir_prefix . '%([^/]+/){-}\.'
+  let patterns.other_dot_path = dir_prefix . '%([^/]+/){-}\.'
   return patterns
 endfunction
 
@@ -76,9 +76,9 @@ function! chezmoi#filetype#handle_managed_file(original_abs_path)
     return
   endif
 
-  let until_dot_prefix = s:get_fixed_dir(a:original_abs_path) . '/' . fixed_name
-  let until_literal_prefix = substitute(until_dot_prefix, '\C/\zsdot_', '.', 'g')
-  let b:chezmoi_target_path = substitute(until_literal_prefix, '\C/\zsliteral_', '', 'g')
+  let fixed_until_dot = s:get_fixed_dir(a:original_abs_path) . '/' . fixed_name
+  let fixed_until_literal = substitute(fixed_until_dot, '\C/\zsdot_', '.', 'g')
+  let b:chezmoi_target_path = substitute(fixed_until_literal, '\C/\zsliteral_', '', 'g')
 
   call s:handle_fixed_path(a:original_abs_path, b:chezmoi_target_path)
 endfunction
