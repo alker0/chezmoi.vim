@@ -64,7 +64,7 @@ function! chezmoi#filetype#handle_chezmoitemplates_file(original_abs_path)
 
   if empty(&filetype)
     setlocal filetype=chezmoitmpl
-  elseif original_abs_path ==# without_tmpl
+  elseif a:original_abs_path ==# without_tmpl
     setlocal filetype+=.chezmoitmpl
   endif
 endfunction
