@@ -22,7 +22,10 @@
 
 # Why
 
-[chezmoi](https://github.com/twpayne/chezmoi) makes it much easier for you to manage your dotfiles. However, most of text editors do not enable syntax highlighting correctly because chezmoi manages your files by using special file naming (e.g. `dot_bashrc`). This plugin solves this problem.
+[chezmoi](https://github.com/twpayne/chezmoi) makes it much easier for you to manage your dotfiles. `chezmoi` uses special file naming (e.g. `dot_bashrc`) but you get still a syntax highlighting support because `chezmoi edit` resolves special naming before passing files to your editor. However you miss a correct highlighting in the following cases:
+- When you edit directly dotfiles without `chezmoi edit`, `vim` does not highlight it.
+- If you use template files (the powerful feature of `chezmoi`), `vim` losses an original syntax highlighting
+This plugin solves those problems.
 
 # Features
 
@@ -30,7 +33,7 @@ This plugin makes vim treat the files to be edited as follows:
 * `dot_bashrc` => `.bashrc`
 * `dot_config/git/private_config` => `.config/git/config`
 
-Furthermore, **with keeping original highlighting**, this plugin applies that of `go-template` to template files (e.g. `dot_vimrc.tmpl`).
+Furthermore, **with keeping original highlighting**, this plugin applies that of `go-template` to template files (e.g. `dot_vimrc.tmpl`), as shown in the demo image.
 
 # Install
 
