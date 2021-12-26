@@ -6,7 +6,7 @@
 
 <br>
 
-<div align="center"><p>Highlighting even a template file</p>
+<div align="center"><p>Highlight even a template file</p>
 <img src="https://user-images.githubusercontent.com/51204827/147376940-f9c23c25-89da-4ad0-9b92-907266afa388.gif" alt="highlighting a template demo" height="400px">
 
 </div>
