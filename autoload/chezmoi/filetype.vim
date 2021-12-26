@@ -89,25 +89,28 @@ function! chezmoi#filetype#handle_managed_file(original_abs_path)
 endfunction
 
 function! s:handle_fixed_path(original_path, fixed_path)
-  if !exists('b:chezmoi_detecting_fixed')
-    let b:chezmoi_detecting_fixed = 1
+  if exists('b:chezmoi_detecting_fixed')
+    return
+  endif
 
-    execute 'doau filetypedetect BufRead ' . fnameescape(a:fixed_path)
-    unlet b:chezmoi_detecting_fixed
+  let b:chezmoi_detecting_fixed = 1
+  execute 'doau filetypedetect BufRead ' . fnameescape(a:fixed_path)
+  unlet b:chezmoi_detecting_fixed
 
-    if fnamemodify(a:original_path, ':e') ==# 'tmpl'
-      let b:chezmoi_original_filetype = &filetype
+  if fnamemodify(a:original_path, ':e') !=# 'tmpl'
+    return
+  endif
 
-      if empty(b:chezmoi_original_filetype) || b:chezmoi_original_filetype ==# 'chezmoitmpl'
-        setfiletype chezmoitmpl
-      else
-        if exists('b:current_syntax')
-          let b:chezmoi_original_syntax = b:current_syntax
-        endif
+  let b:chezmoi_original_filetype = &filetype
 
-        setlocal filetype+=.chezmoitmpl
-      endif
+  if empty(b:chezmoi_original_filetype) || b:chezmoi_original_filetype ==# 'chezmoitmpl'
+    setfiletype chezmoitmpl
+  else
+    if exists('b:current_syntax')
+      let b:chezmoi_original_syntax = b:current_syntax
     endif
+
+    setlocal filetype+=.chezmoitmpl
   endif
 endfunction
 
