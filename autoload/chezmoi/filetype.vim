@@ -27,9 +27,9 @@ function! chezmoi#filetype#handle_chezmoi_filetype() abort
   elseif original_abs_path =~# s:special_path_patterns['templates']
     call chezmoi#filetype#handle_chezmoitemplates_file(original_abs_path)
   elseif original_abs_path =~# s:special_path_patterns['data']
-    call chezmoi#filetype#handle_managed_file(original_abs_path)
+    call chezmoi#filetype#handle_file_without_fix_naming(original_abs_path)
   elseif original_abs_path =~# s:special_path_patterns['config']
-    call chezmoi#filetype#handle_managed_file(original_abs_path)
+    call chezmoi#filetype#handle_file_without_fix_naming(original_abs_path)
   elseif original_abs_path =~# s:special_path_patterns['other_dot_path']
    return
   else
@@ -72,6 +72,13 @@ function! chezmoi#filetype#handle_chezmoitemplates_file(original_abs_path)
   elseif a:original_abs_path ==# without_tmpl
     setlocal filetype+=.chezmoitmpl
   endif
+endfunction
+
+function! chezmoi#filetype#handle_file_without_fix_naming(original_abs_path, ...)" target path is optional
+  let b:chezmoi_target_path = get(a:, 1, a:original_abs_path)
+  let without_tmpl = substitute(b:chezmoi_target_path, '\C\.tmpl$', '', '')
+
+  call s:handle_fixed_path(a:original_abs_path, without_tmpl)
 endfunction
 
 function! chezmoi#filetype#handle_managed_file(original_abs_path)
