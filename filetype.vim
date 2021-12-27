@@ -4,10 +4,17 @@ endif
 let g:chezmoi#_loaded = 1
 
 if !exists('g:chezmoi#source_dir_path')
-  if empty($XDG_DATA_HOME)
-    let g:chezmoi#source_dir_path = $HOME . '/.local/share/chezmoi'
+  if !empty($XDG_DATA_HOME)
+    let g:chezmoi#source_dir_path = substitute($XDG_DATA_HOME, '\C\\', '/', 'g') . '/chezmoi'
   else
-    let g:chezmoi#source_dir_path = $XDG_DATA_HOME . '/chezmoi'
+    if !empty($HOME)
+      let s:home_dir = $HOME
+    elseif has('win32') || has('win64')
+      let s:home_dir = $HOMEDRIVE . $HOMEPATH
+    else
+      let s:home_dir = expand('~')
+    endif
+    let g:chezmoi#source_dir_path = substitute(s:home_dir, '\\', '/', 'g') . '/.local/share/chezmoi'
   endif
 endif
 
