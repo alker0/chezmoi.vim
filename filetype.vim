@@ -11,21 +11,20 @@ if !exists('g:chezmoi#source_dir_path')
   endif
 endif
 
-if !exists('g:chezmoi#tmp_dir_pattern')
-  if !has('unix')
-    " windows: ,$TEMP/chezmoi-edit*
-    let g:chezmoi#tmp_dir_pattern = ''
-  elseif empty($TMPDIR)
-    let g:chezmoi#tmp_dir_pattern = ',/tmp/chezmoi-edit*'
-  else
-    let g:chezmoi#tmp_dir_pattern = ',$TMPDIR/chezmoi-edit*'
-  endif
-endif
-
 augroup chezmoi_filetypedetect
   autocmd!
 
-  execute 'autocmd BufNewFile,BufRead '. g:chezmoi#source_dir_path . '/*' . g:chezmoi#tmp_dir_pattern . ' call chezmoi#filetype#handle_chezmoi_filetype()'
+  execute 'autocmd BufNewFile,BufRead '. g:chezmoi#source_dir_path . '/* call chezmoi#filetype#handle_chezmoi_filetype()'
 augroup END
+
+if has('unix')
+  if empty($TMPDIR)
+    autocmd chezmoi_filetypedetect  BufNewFile,BufRead /tmp/chezmoi-edit* call chezmoi#filetype#handle_chezmoi_filetype_hardlink()
+  else
+    autocmd chezmoi_filetypedetect  BufNewFile,BufRead $TMPDIR/chezmoi-edit* call chezmoi#filetype#handle_chezmoi_filetype_hardlink()
+  endif
+" elseif !empty($TEMP) " for windows
+"   autocmd chezmoi_filetypedetect  BufNewFile,BufRead $TEMP/chezmoi-edit* call chezmoi#filetype#handle_chezmoi_filetype_hardlink()
+endif
 
 " vim: sw=2 ts=2 et

@@ -37,6 +37,23 @@ function! chezmoi#filetype#handle_chezmoi_filetype() abort
   endif
 endfunction
 
+function! chezmoi#filetype#handle_chezmoi_filetype_hardlink() abort
+  if did_filetype() || exists('b:chezmoi_detecting_fixed')
+    return
+  endif
+
+  call s:reset_buf_vars()
+  let original_abs_path = expand('<amatch>:p')
+
+  if exists('g:chezmoi#detect_ignore_pattern') &&
+      \ original_abs_path =~# g:chezmoi#detect_ignore_pattern
+    return
+  else
+    let target_path = substitute(original_abs_path, '\C^.\{-}/chezmoi-edit[^/]*/', g:chezmoi#source_dir_path, '')
+    call chezmoi#filetype#handle_file_without_fix_naming(original_abs_path, target_path)
+  endif
+endfunction
+
 function! s:reset_buf_vars()
   " unlet! b:chezmoi_detecting_fixed
   unlet! b:chezmoi_target_path
