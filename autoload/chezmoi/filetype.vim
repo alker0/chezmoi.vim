@@ -26,8 +26,6 @@ function! chezmoi#filetype#handle_chezmoi_filetype() abort
     setfiletype chezmoitmpl
   elseif original_abs_path =~# s:special_path_patterns['templates']
     call chezmoi#filetype#handle_chezmoitemplates_file(original_abs_path)
-  elseif original_abs_path =~# s:special_path_patterns['data']
-    call chezmoi#filetype#handle_file_without_fix_naming(original_abs_path)
   elseif original_abs_path =~# s:special_path_patterns['config']
     call chezmoi#filetype#handle_file_without_fix_naming(original_abs_path)
   elseif original_abs_path =~# s:special_path_patterns['other_dot_path']
@@ -67,13 +65,13 @@ function! s:get_special_path_patterns()
   let patterns = {}
   let patterns.ignore_remove = dir_prefix . '\.chezmoi%(ignore|remove)$'
   let patterns.templates = dir_prefix . '\.chezmoitemplates/.+'
-  let patterns.data = dir_prefix . '\.chezmoidata\.%(json|yaml|toml)$'
   let patterns.config = dir_prefix . '\.chezmoi\.%(json|yaml|toml|hcl|plist|properties)\.tmpl$'
   " Ignoring below paths should not be a problem:
   " .chezmoiversion
   " .chezmoiroot
   " .chezmoiscript
-  " .chezmoiexternal
+  " .chezmoidata.<format>
+  " .chezmoiexternal.<format>
   let patterns.other_dot_path = dir_prefix . '%([^/]+/){-}\.'
   return patterns
 endfunction
