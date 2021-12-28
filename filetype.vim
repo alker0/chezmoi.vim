@@ -7,14 +7,11 @@ if !exists('g:chezmoi#source_dir_path')
   if !empty($XDG_DATA_HOME)
     let g:chezmoi#source_dir_path = substitute($XDG_DATA_HOME, '\C\\', '/', 'g') . '/chezmoi'
   else
-    if !empty($HOME)
-      let s:home_dir = $HOME
-    elseif has('win32') || has('win64')
-      let s:home_dir = $HOMEDRIVE . $HOMEPATH
-    else
-      let s:home_dir = expand('~')
-    endif
-    let g:chezmoi#source_dir_path = substitute(s:home_dir, '\\', '/', 'g') . '/.local/share/chezmoi'
+    let g:chezmoi#source_dir_path = expand('~') . '/.local/share/chezmoi'
+  endif
+
+  if !has('unix') " `unix` also includes cygwin
+    let g:chezmoi#source_dir_path = substitute(g:chezmoi#source_dir_path, '\\', '/', 'g')
   endif
 endif
 
