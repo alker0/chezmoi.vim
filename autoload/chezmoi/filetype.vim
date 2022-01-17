@@ -47,7 +47,7 @@ function! chezmoi#filetype#handle_chezmoi_filetype_hardlink() abort
       \ original_abs_path =~# g:chezmoi#detect_ignore_pattern
     return
   else
-    let target_path = substitute(original_abs_path, '\C^.\{-}/chezmoi-edit[^/]*/', g:chezmoi#source_dir_path, '')
+    let target_path = substitute(original_abs_path, '\C^.\{-}/chezmoi-edit[^/]*\ze/', g:chezmoi#source_dir_path, '')
     call chezmoi#filetype#handle_file_without_fix_naming(original_abs_path, target_path)
   endif
 endfunction
