@@ -74,7 +74,8 @@ If the file is chezmoi template, this plugin merges syntax highlighting as follo
 | --------------------------------- | -------------------------------------------------------- | ----------------------------------------------         |
 | `g:chezmoi#loaded`                | 0                                                        | Setting 1 before loading disables this plugin          |
 | `g:chezmoi#detect_ignore_pattern` | \<empty string>                                          | Regex pattern of path for ignoring file type detection |
-| `g:chezmoi#source_dir_path`       | `$XDG_DATA_HOME/chezmoi` or `$HOME/.local/share/chezmoi` | Source Directory managed by chezmoi                    |
+| `g:chezmoi#executable_path`       | `chezmoi`                                                | Location of the chezmoi binary, used to resolve the source directory |
+| `g:chezmoi#source_dir_path`       | The value returned by `chezmoi source-path` or `$XDG_DATA_HOME/chezmoi` or `$HOME/.local/share/chezmoi` | Source Directory managed by chezmoi |
 
 # License
 The MIT License but includes works of the BSD License.
