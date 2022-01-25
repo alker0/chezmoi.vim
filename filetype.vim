@@ -3,22 +3,23 @@ if exists('g:chezmoi#_loaded')
 endif
 let g:chezmoi#_loaded = 1
 
-if !exists('g:chezmoi#executable_path')
-  let g:chezmoi#executable_path = 'chezmoi'
-endif
-
 if !exists('g:chezmoi#source_dir_path')
-  let g:chezmoi#source_dir_path = glob( substitute( system( g:chezmoi#executable_path . " source-path" ), '[\r\n]*$', '', '' ) )
-  if !empty(g:chezmoi#source_dir_path)
-    " hopefully we have what we need
-  elseif !empty($XDG_DATA_HOME)
-    let g:chezmoi#source_dir_path = substitute($XDG_DATA_HOME, '\C\\', '/', 'g') . '/chezmoi'
+  if exists('g:chezmoi#executable_path')
+    let g:chezmoi#source_dir_path = glob( substitute( system( g:chezmoi#executable_path . " source-path" ), '[\r\n]*$', '', '' ) )
   else
-    let g:chezmoi#source_dir_path = expand('~') . '/.local/share/chezmoi'
+    let g:chezmoi#source_dir_path = ''
   endif
 
-  if !has('unix') " `unix` also includes cygwin
-    let g:chezmoi#source_dir_path = substitute(g:chezmoi#source_dir_path, '\\', '/', 'g')
+  if empty(g:chezmoi#source_dir_path)
+    if !empty($XDG_DATA_HOME)
+      let g:chezmoi#source_dir_path = substitute($XDG_DATA_HOME, '\C\\', '/', 'g') . '/chezmoi'
+    else
+      let g:chezmoi#source_dir_path = expand('~') . '/.local/share/chezmoi'
+    endif
+
+    if !has('unix') " `unix` also includes cygwin
+      let g:chezmoi#source_dir_path = substitute(g:chezmoi#source_dir_path, '\\', '/', 'g')
+    endif
   endif
 endif
 
