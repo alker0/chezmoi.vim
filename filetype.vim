@@ -17,7 +17,7 @@ if !exists('g:chezmoi#source_dir_path')
 
     if executable( g:chezmoi#use_external )
       let g:chezmoi#use_external = exepath( g:chezmoi#use_external )
-      let g:chezmoi#source_dir_path = glob( substitute( system( g:chezmoi#use_external . " source-path" ), '[\r\n]*$', '', '' ) )
+      let g:chezmoi#source_dir_path = glob( substitute( system( shellescape(g:chezmoi#use_external) . ' source-path' ), '[\r\n]*$', '', '' ) )
     else
       let g:chezmoi#use_external = ''
     endif
