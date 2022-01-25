@@ -74,7 +74,10 @@ If the file is chezmoi template, this plugin merges syntax highlighting as follo
 | --------------------------------- | -------------------------------------------------------- | ----------------------------------------------         |
 | `g:chezmoi#loaded`                | 0                                                        | Setting 1 before loading disables this plugin          |
 | `g:chezmoi#detect_ignore_pattern` | \<empty string>                                          | Regex pattern of path for ignoring file type detection |
-| `g:chezmoi#source_dir_path`       | `$XDG_DATA_HOME/chezmoi` or `$HOME/.local/share/chezmoi` | Source Directory managed by chezmoi                    |
+| `g:chezmoi#use_external`          | \<not set>                                               | If set, enables the use of the external chezmoi binary for various purposes. More advanced, but slower. See comments below for more details |
+| `g:chezmoi#source_dir_path`       | The value returned by `chezmoi source-path` (if the use of external chezmoi is enabled) or `$XDG_DATA_HOME/chezmoi` or `$HOME/.local/share/chezmoi` | Source Directory managed by chezmoi |
+
+* Note: to enable the use of the external chezmoi binary, set the `g:chezmoi#use_external` variable. This variable must be set in `.vimrc` file, before the plugin is sourced. The value must be either a valid path to the binary, or just the binary name, if it can be found in `$PATH`. Alternatively, the value can be set to 1, in which case the plugin will try to detect the binary name automatically. After the plugin is sourced, the value of this variable may change. It will contain either the full name of the chezmoi binary that is used, or empty if the external chezmoi can not be used for some reason.
 
 # License
 The MIT License but includes works of the BSD License.
