@@ -4,10 +4,23 @@ endif
 let g:chezmoi#_loaded = 1
 
 if !exists('g:chezmoi#source_dir_path')
-  if exists('g:chezmoi#executable_path')
-    let g:chezmoi#source_dir_path = glob( substitute( system( g:chezmoi#executable_path . " source-path" ), '[\r\n]*$', '', '' ) )
-  else
-    let g:chezmoi#source_dir_path = ''
+  let g:chezmoi#source_dir_path = ''
+
+  if exists('g:chezmoi#use_external')
+    if type(g:chezmoi#use_external) == v:t_number || type(g:chezmoi#use_external) == v:t_bool
+      if g:chezmoi#use_external
+        let g:chezmoi#use_external = 'chezmoi'
+      else
+        let g:chezmoi#use_external = ''
+      endif
+    endif
+
+    if executable( g:chezmoi#use_external )
+      let g:chezmoi#use_external = exepath( g:chezmoi#use_external )
+      let g:chezmoi#source_dir_path = glob( substitute( system( g:chezmoi#use_external . " source-path" ), '[\r\n]*$', '', '' ) )
+    else
+      let g:chezmoi#use_external = ''
+    endif
   endif
 
   if empty(g:chezmoi#source_dir_path)
