@@ -20,6 +20,15 @@ if !exists('g:chezmoi#source_dir_path')
     if !has('unix') " `unix` also includes cygwin
       let g:chezmoi#source_dir_path = substitute(g:chezmoi#source_dir_path, '\\', '/', 'g')
     endif
+
+    let s:chezmoi_root_file = glob( g:chezmoi#source_dir_path . "/.chezmoiroot" )
+    if !empty( s:chezmoi_root_file )
+      let s:chezmoiroot = substitute( readfile( s:chezmoi_root_file, '', 1 )[0], '[\r\n]*$', '', '' )
+      let s:chezmoiroot = substitute( s:chezmoiroot, '\\', '/', 'g' )
+      let g:chezmoi#source_dir_path = substitute( g:chezmoi#source_dir_path, '[\\/]*$', '/' . s:chezmoiroot, '' )
+      unlet s:chezmoiroot
+    endif
+    unlet s:chezmoi_root_file
   endif
 endif
 
