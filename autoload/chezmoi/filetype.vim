@@ -31,7 +31,7 @@ function! chezmoi#filetype#handle_chezmoi_filetype() abort
     setlocal undodir-=. " In default, `undodir` will be empty
 
     " A swap file is created before file type detection so should remove that.
-    let swap_file_path = substitute(original_abs_path, '/\v\zs\.?([^/]+)$', '.\1.swp', '')
+    let swap_file_path = swapname('%')
     if !empty(glob(swap_file_path))
       call delete(swap_file_path)
     endif
