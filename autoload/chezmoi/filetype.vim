@@ -32,7 +32,8 @@ function! chezmoi#filetype#handle_chezmoi_filetype() abort
     setfiletype chezmoitmpl
   elseif original_abs_path =~# s:special_path_patterns['templates']
     call chezmoi#filetype#handle_chezmoitemplates_file(original_abs_path)
-  elseif original_abs_path =~# s:special_path_patterns['config']
+  elseif original_abs_path =~# s:special_path_patterns['config'] ||
+      \ original_abs_path =~# s:special_path_patterns['data']
     call chezmoi#filetype#handle_file_without_fix_naming(original_abs_path)
   elseif original_abs_path =~# s:special_path_patterns['external']
     call s:handle_fixed_path(original_abs_path, original_abs_path)
@@ -78,6 +79,7 @@ function! s:get_special_path_patterns()
   let patterns.templates = dir_prefix . '\.chezmoitemplates/.+'
   let patterns.scripts = dir_prefix . '\.chezmoiscripts/.+'
   let patterns.scripts_dot = dir_prefix . '\.chezmoiscripts/' . other_dot_pattern
+  let patterns.data = dir_prefix . '\.chezmoidata' . config_extensions . '$'
   let patterns.external = dir_prefix . '\.chezmoiexternal' . config_extensions . '$'
   let patterns.config = dir_prefix . '\.chezmoi' . config_extensions . '\.tmpl$'
   " Ignoring below paths should not be a problem:
