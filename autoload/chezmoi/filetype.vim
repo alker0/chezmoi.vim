@@ -31,20 +31,12 @@ function! chezmoi#filetype#handle_chezmoi_filetype() abort
 
     setfiletype chezmoitmpl
   elseif original_abs_path =~# s:special_path_patterns['templates']
-    " Disable vim artifacts
-    setlocal directory-=. " This maybe can not disable swap file
-    setlocal backupdir-=.
-    setlocal undodir-=. " In default, `undodir` will be empty
-
-    " A swap file is created before file type detection so should remove that.
-    let swap_file_path = swapname('%')
-    if !empty(glob(swap_file_path))
-      call delete(swap_file_path)
-    endif
-
     call chezmoi#filetype#handle_chezmoitemplates_file(original_abs_path)
   elseif original_abs_path =~# s:special_path_patterns['config']
     call chezmoi#filetype#handle_file_without_fix_naming(original_abs_path)
+  elseif original_abs_path =~# s:special_path_patterns['external']
+    call s:handle_fixed_path(original_abs_path, original_abs_path)
+    call chezmoi#filetype#enable_template_force()
   elseif original_abs_path =~# s:special_path_patterns['other_dot_path']
    return
   else
@@ -79,13 +71,15 @@ endfunction
 function! s:get_special_path_patterns()
   " g:chezmoi#source_dir_path should be defined in /filetype.vim
   let dir_prefix = '^' . g:chezmoi#source_dir_path . '/\v'
+  let config_extensions = '\.%(json|yaml|toml|hcl|plist|properties)'
   let other_dot_pattern = '%([^/]+/){-}\.'
   let patterns = {}
   let patterns.ignore_remove = dir_prefix . '\.chezmoi%(ignore|remove)$'
   let patterns.templates = dir_prefix . '\.chezmoitemplates/.+'
-  let patterns.config = dir_prefix . '\.chezmoi\.%(json|yaml|toml|hcl|plist|properties)\.tmpl$'
   let patterns.scripts = dir_prefix . '\.chezmoiscripts/.+'
   let patterns.scripts_dot = dir_prefix . '\.chezmoiscripts/' . other_dot_pattern
+  let patterns.external = dir_prefix . '\.chezmoiexternal' . config_extensions . '$'
+  let patterns.config = dir_prefix . '\.chezmoi' . config_extensions . '\.tmpl$'
   " Ignoring below paths should not be a problem:
   " .chezmoiversion
   " .chezmoiroot
@@ -94,14 +88,28 @@ function! s:get_special_path_patterns()
 endfunction
 
 function! chezmoi#filetype#handle_chezmoitemplates_file(original_abs_path)
+  " Disable vim artifacts
+  setlocal directory-=. " This maybe can not disable swap file
+  setlocal backupdir-=.
+  setlocal undodir-=. " In default, `undodir` will be empty
+
+  " A swap file is created before file type detection so should remove that.
+  let swap_file_path = swapname('%')
+  if !empty(glob(swap_file_path))
+    call delete(swap_file_path)
+  endif
+
   let b:chezmoi_target_path = a:original_abs_path
   let without_tmpl = substitute(a:original_abs_path, '\C\.tmpl$', '', '')
 
   call s:handle_fixed_path(a:original_abs_path, without_tmpl)
+  call chezmoi#filetype#enable_template_force()
+endfunction
 
+function! chezmoi#filetype#enable_template_force()
   if empty(&filetype)
     setlocal filetype=chezmoitmpl
-  elseif a:original_abs_path ==# without_tmpl
+  elseif &filetype !~# '\<chezmoitmpl\>'
     setlocal filetype+=.chezmoitmpl
   endif
 endfunction
