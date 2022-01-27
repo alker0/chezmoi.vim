@@ -20,6 +20,12 @@ function! chezmoi#filetype#handle_chezmoi_filetype() abort
   if exists('g:chezmoi#detect_ignore_pattern') &&
       \ original_abs_path =~# g:chezmoi#detect_ignore_pattern
     return
+  elseif original_abs_path =~# s:special_path_patterns['scripts']
+    if original_abs_path =~# s:special_path_patterns['scripts_dot']
+      return
+    else
+      call chezmoi#filetype#handle_managed_file(original_abs_path)
+    endif
   elseif original_abs_path =~# s:special_path_patterns['ignore_remove']
     let b:chezmoi_target_path = original_abs_path
 
@@ -73,17 +79,17 @@ endfunction
 function! s:get_special_path_patterns()
   " g:chezmoi#source_dir_path should be defined in /filetype.vim
   let dir_prefix = '^' . g:chezmoi#source_dir_path . '/\v'
+  let other_dot_pattern = '%([^/]+/){-}\.'
   let patterns = {}
   let patterns.ignore_remove = dir_prefix . '\.chezmoi%(ignore|remove)$'
   let patterns.templates = dir_prefix . '\.chezmoitemplates/.+'
   let patterns.config = dir_prefix . '\.chezmoi\.%(json|yaml|toml|hcl|plist|properties)\.tmpl$'
+  let patterns.scripts = dir_prefix . '\.chezmoiscripts/.+'
+  let patterns.scripts_dot = dir_prefix . '\.chezmoiscripts/' . other_dot_pattern
   " Ignoring below paths should not be a problem:
   " .chezmoiversion
   " .chezmoiroot
-  " .chezmoiscript
-  " .chezmoidata.<format>
-  " .chezmoiexternal.<format>
-  let patterns.other_dot_path = dir_prefix . '%([^/]+/){-}\.'
+  let patterns.other_dot_path = dir_prefix . other_dot_pattern
   return patterns
 endfunction
 
