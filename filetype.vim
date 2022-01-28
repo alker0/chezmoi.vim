@@ -25,7 +25,7 @@ if !exists('g:chezmoi#source_dir_path')
 
   if empty(g:chezmoi#source_dir_path)
     if !empty($XDG_DATA_HOME)
-      let g:chezmoi#source_dir_path = substitute($XDG_DATA_HOME, '\C\\', '/', 'g') . '/chezmoi'
+      let g:chezmoi#source_dir_path = substitute($XDG_DATA_HOME, '\\', '/', 'g') . '/chezmoi'
     else
       let g:chezmoi#source_dir_path = expand('~') . '/.local/share/chezmoi'
     endif
