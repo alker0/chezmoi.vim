@@ -73,7 +73,7 @@ function! chezmoi#filetype#handle_chezmoi_filetype_hardlink() abort
   call s:handle_source_file(replaced_to_source, options)
 endfunction
 
-function! s:handle_source_file(original_abs_path, options)
+function! s:handle_source_file(original_abs_path, options) abort
   " a:options.source_path (optional)
   " a:options.need_name_fix
   " a:options.enable_tmpl_force
@@ -99,14 +99,14 @@ function! s:handle_source_file(original_abs_path, options)
   endif
 endfunction
 
-function! s:reset_buf_vars()
+function! s:reset_buf_vars() abort
   " unlet! b:chezmoi_detecting_fixed
   unlet! b:chezmoi_target_path
   unlet! b:chezmoi_original_filetype
   unlet! b:chezmoi_original_syntax
 endfunction
 
-function! s:get_special_path_patterns()
+function! s:get_special_path_patterns() abort
   " g:chezmoi#source_dir_path should be defined in /filetype.vim
   let dir_prefix = '^' . g:chezmoi#source_dir_path . '/\v'
   let config_extensions = '\.%(json|yaml|toml|hcl|plist|properties)'
@@ -126,7 +126,7 @@ function! s:get_special_path_patterns()
   return patterns
 endfunction
 
-function! s:disable_artifacts()
+function! s:disable_artifacts() abort
   " Disable vim artifacts
   setlocal directory-=. " This maybe can not disable swap file
   setlocal backupdir-=.
@@ -139,7 +139,7 @@ function! s:disable_artifacts()
   endif
 endfunction
 
-function! s:enable_template_force()
+function! s:enable_template_force() abort
   if empty(&filetype)
     setlocal filetype=chezmoitmpl
   elseif &filetype !~# '\<chezmoitmpl\>'
@@ -147,7 +147,7 @@ function! s:enable_template_force()
   endif
 endfunction
 
-function! s:enable_template_auto(original_path)
+function! s:enable_template_auto(original_path) abort
   if fnamemodify(a:original_path, ':e') !=# 'tmpl'
     return
   endif
@@ -165,7 +165,7 @@ function! s:enable_template_auto(original_path)
   endif
 endfunction
 
-function! s:run_default_detect(detect_target)
+function! s:run_default_detect(detect_target) abort
   if exists('b:chezmoi_detecting_fixed')
     return
   endif
@@ -175,7 +175,7 @@ function! s:run_default_detect(detect_target)
   unlet b:chezmoi_detecting_fixed
 endfunction
 
-function! s:get_fixed_path(original_abs_path)
+function! s:get_fixed_path(original_abs_path) abort
   let fixed_name = s:get_fixed_name(fnamemodify(a:original_abs_path, ':t'))
 
   if empty(fixed_name)
@@ -187,7 +187,7 @@ function! s:get_fixed_path(original_abs_path)
   return substitute(fixed_until_literal, '\C/\zsliteral_', '', 'g')
 endfunction
 
-function! s:get_name_prefix_pattern()
+function! s:get_name_prefix_pattern() abort
   let prefix_list = ['create', 'modify', 'remove', 'run', 'encrypted', 'private', 'readonly',
     \ 'executable', 'once', 'onchange', 'before', 'after', 'symlink', 'empty']
   return join(map(prefix_list, '"%(" . v:val . "_)?"'), '')
