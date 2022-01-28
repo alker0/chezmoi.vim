@@ -20,29 +20,36 @@ function! chezmoi#filetype#handle_chezmoi_filetype() abort
   if exists('g:chezmoi#detect_ignore_pattern') &&
       \ original_abs_path =~# g:chezmoi#detect_ignore_pattern
     return
-  elseif original_abs_path =~# s:special_path_patterns['scripts']
+  endif
+
+  let options = {}
+  let options.need_name_fix = v:true
+  let options.enable_tmpl_force = v:false
+
+  if original_abs_path =~# s:special_path_patterns['scripts']
     if original_abs_path =~# s:special_path_patterns['scripts_dot']
       return
-    else
-      call chezmoi#filetype#handle_managed_file(original_abs_path)
     endif
   elseif original_abs_path =~# s:special_path_patterns['ignore_remove']
     let b:chezmoi_target_path = original_abs_path
-
     setfiletype chezmoitmpl
+    return
   elseif original_abs_path =~# s:special_path_patterns['templates']
-    call chezmoi#filetype#handle_chezmoitemplates_file(original_abs_path)
+    call s:disable_artifacts()
+    let options.source_path = original_abs_path
+    let options.need_name_fix = v:false
+    let options.enable_tmpl_force = v:true
   elseif original_abs_path =~# s:special_path_patterns['config'] ||
       \ original_abs_path =~# s:special_path_patterns['data']
-    call chezmoi#filetype#handle_file_without_fix_naming(original_abs_path)
+    let options.need_name_fix = v:false
   elseif original_abs_path =~# s:special_path_patterns['external']
-    call s:handle_fixed_path(original_abs_path, original_abs_path)
-    call chezmoi#filetype#enable_template_force()
+    let options.need_name_fix = v:false
+    let options.enable_tmpl_force = v:true
   elseif original_abs_path =~# s:special_path_patterns['other_dot_path']
    return
-  else
-    call chezmoi#filetype#handle_managed_file(original_abs_path)
   endif
+
+  call s:handle_source_file(original_abs_path, options)
 endfunction
 
 function! chezmoi#filetype#handle_chezmoi_filetype_hardlink() abort
@@ -56,9 +63,39 @@ function! chezmoi#filetype#handle_chezmoi_filetype_hardlink() abort
   if exists('g:chezmoi#detect_ignore_pattern') &&
       \ original_abs_path =~# g:chezmoi#detect_ignore_pattern
     return
+  endif
+
+  let options = {}
+  let options.need_name_fix = v:false
+  let options.enable_tmpl_force = v:false
+
+  let replaced_to_source = substitute(original_abs_path, '\C^.\{-}/chezmoi-edit[^/]*\ze/', g:chezmoi#source_dir_path, '')
+  call s:handle_source_file(replaced_to_source, options)
+endfunction
+
+function! s:handle_source_file(original_abs_path, options)
+  " a:options.source_path (optional)
+  " a:options.need_name_fix
+  " a:options.enable_tmpl_force
+  if a:options.need_name_fix
+    let b:chezmoi_default_detect_target = s:get_fixed_path(a:original_abs_path)
   else
-    let target_path = substitute(original_abs_path, '\C^.\{-}/chezmoi-edit[^/]*\ze/', g:chezmoi#source_dir_path, '')
-    call chezmoi#filetype#handle_file_without_fix_naming(original_abs_path, target_path)
+    let b:chezmoi_default_detect_target = substitute(a:original_abs_path, '\C\.tmpl$', '', '')
+  endif
+
+  if empty(b:chezmoi_default_detect_target)
+    unlet b:chezmoi_default_detect_target
+    return
+  endif
+
+  let b:chezmoi_source_path = get(a:options, 'source_path', b:chezmoi_default_detect_target)
+
+  call s:run_default_detect(b:chezmoi_default_detect_target)
+
+  if a:options.enable_tmpl_force
+    call s:enable_template_force()
+  else
+    call s:enable_template_auto(a:original_abs_path)
   endif
 endfunction
 
@@ -89,7 +126,7 @@ function! s:get_special_path_patterns()
   return patterns
 endfunction
 
-function! chezmoi#filetype#handle_chezmoitemplates_file(original_abs_path)
+function! s:disable_artifacts()
   " Disable vim artifacts
   setlocal directory-=. " This maybe can not disable swap file
   setlocal backupdir-=.
@@ -100,15 +137,9 @@ function! chezmoi#filetype#handle_chezmoitemplates_file(original_abs_path)
   if !empty(glob(swap_file_path))
     call delete(swap_file_path)
   endif
-
-  let b:chezmoi_target_path = a:original_abs_path
-  let without_tmpl = substitute(a:original_abs_path, '\C\.tmpl$', '', '')
-
-  call s:handle_fixed_path(a:original_abs_path, without_tmpl)
-  call chezmoi#filetype#enable_template_force()
 endfunction
 
-function! chezmoi#filetype#enable_template_force()
+function! s:enable_template_force()
   if empty(&filetype)
     setlocal filetype=chezmoitmpl
   elseif &filetype !~# '\<chezmoitmpl\>'
@@ -116,36 +147,7 @@ function! chezmoi#filetype#enable_template_force()
   endif
 endfunction
 
-function! chezmoi#filetype#handle_file_without_fix_naming(original_abs_path, ...)" target path is optional
-  let b:chezmoi_target_path = get(a:, 1, a:original_abs_path)
-  let without_tmpl = substitute(b:chezmoi_target_path, '\C\.tmpl$', '', '')
-
-  call s:handle_fixed_path(a:original_abs_path, without_tmpl)
-endfunction
-
-function! chezmoi#filetype#handle_managed_file(original_abs_path)
-  let fixed_name = s:get_fixed_name(fnamemodify(a:original_abs_path, ':t'))
-
-  if empty(fixed_name)
-    return
-  endif
-
-  let fixed_until_dot = s:get_fixed_dir(a:original_abs_path) . '/' . fixed_name
-  let fixed_until_literal = substitute(fixed_until_dot, '\C/\zsdot_', '.', 'g')
-  let b:chezmoi_target_path = substitute(fixed_until_literal, '\C/\zsliteral_', '', 'g')
-
-  call s:handle_fixed_path(a:original_abs_path, b:chezmoi_target_path)
-endfunction
-
-function! s:handle_fixed_path(original_path, fixed_path)
-  if exists('b:chezmoi_detecting_fixed')
-    return
-  endif
-
-  let b:chezmoi_detecting_fixed = 1
-  execute 'doau filetypedetect BufRead ' . fnameescape(a:fixed_path)
-  unlet b:chezmoi_detecting_fixed
-
+function! s:enable_template_auto(original_path)
   if fnamemodify(a:original_path, ':e') !=# 'tmpl'
     return
   endif
@@ -161,6 +163,28 @@ function! s:handle_fixed_path(original_path, fixed_path)
 
     setlocal filetype+=.chezmoitmpl
   endif
+endfunction
+
+function! s:run_default_detect(detect_target)
+  if exists('b:chezmoi_detecting_fixed')
+    return
+  endif
+
+  let b:chezmoi_detecting_fixed = 1
+  execute 'doau filetypedetect BufRead ' . fnameescape(a:detect_target)
+  unlet b:chezmoi_detecting_fixed
+endfunction
+
+function! s:get_fixed_path(original_abs_path)
+  let fixed_name = s:get_fixed_name(fnamemodify(a:original_abs_path, ':t'))
+
+  if empty(fixed_name)
+    return ''
+  endif
+
+  let fixed_until_dot = s:get_fixed_dir(a:original_abs_path) . '/' . fixed_name
+  let fixed_until_literal = substitute(fixed_until_dot, '\C/\zsdot_', '.', 'g')
+  return substitute(fixed_until_literal, '\C/\zsliteral_', '', 'g')
 endfunction
 
 function! s:get_name_prefix_pattern()
