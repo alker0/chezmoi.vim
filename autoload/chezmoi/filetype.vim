@@ -13,13 +13,13 @@ function! chezmoi#filetype#handle_chezmoi_filetype() abort
   call s:reset_buf_vars()
   let original_abs_path = expand('<amatch>:p')
 
-  if !exists('s:special_path_patterns')
-    let s:special_path_patterns = s:get_special_path_patterns()
-  endif
-
   if exists('g:chezmoi#detect_ignore_pattern') &&
       \ original_abs_path =~# g:chezmoi#detect_ignore_pattern
     return
+  endif
+
+  if !exists('s:special_path_patterns')
+    let s:special_path_patterns = s:get_special_path_patterns()
   endif
 
   let options = {}
