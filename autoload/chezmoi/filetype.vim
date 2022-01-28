@@ -139,6 +139,16 @@ function! s:disable_artifacts() abort
   endif
 endfunction
 
+function! s:run_default_detect(detect_target) abort
+  if exists('b:chezmoi_detecting_fixed')
+    return
+  endif
+
+  let b:chezmoi_detecting_fixed = 1
+  execute 'doau filetypedetect BufRead ' . fnameescape(a:detect_target)
+  unlet b:chezmoi_detecting_fixed
+endfunction
+
 function! s:enable_template_force() abort
   if empty(&filetype)
     setlocal filetype=chezmoitmpl
@@ -165,16 +175,6 @@ function! s:enable_template_auto(original_path) abort
   endif
 endfunction
 
-function! s:run_default_detect(detect_target) abort
-  if exists('b:chezmoi_detecting_fixed')
-    return
-  endif
-
-  let b:chezmoi_detecting_fixed = 1
-  execute 'doau filetypedetect BufRead ' . fnameescape(a:detect_target)
-  unlet b:chezmoi_detecting_fixed
-endfunction
-
 function! s:get_fixed_path(original_abs_path) abort
   let fixed_name = s:get_fixed_name(fnamemodify(a:original_abs_path, ':t'))
 
@@ -187,12 +187,6 @@ function! s:get_fixed_path(original_abs_path) abort
   return substitute(fixed_until_literal, '\C/\zsliteral_', '', 'g')
 endfunction
 
-function! s:get_name_prefix_pattern() abort
-  let prefix_list = ['create', 'modify', 'remove', 'run', 'encrypted', 'private', 'readonly',
-    \ 'executable', 'once', 'onchange', 'before', 'after', 'symlink', 'empty']
-  return join(map(prefix_list, '"%(" . v:val . "_)?"'), '')
-endfunction
-
 function! s:get_fixed_name(original_name) abort
   if !exists('s:name_prefix_pattern')
     let s:name_prefix_pattern = s:get_name_prefix_pattern()
@@ -200,6 +194,12 @@ function! s:get_fixed_name(original_name) abort
 
   return substitute(a:original_name,
     \ '\C\v^' . s:name_prefix_pattern . '|%(\.literal)?%(\.tmpl)?$', '', 'g')
+endfunction
+
+function! s:get_name_prefix_pattern() abort
+  let prefix_list = ['create', 'modify', 'remove', 'run', 'encrypted', 'private', 'readonly',
+    \ 'executable', 'once', 'onchange', 'before', 'after', 'symlink', 'empty']
+  return join(map(prefix_list, '"%(" . v:val . "_)?"'), '')
 endfunction
 
 function! s:get_fixed_dir(original_abs_path) abort
