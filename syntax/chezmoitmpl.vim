@@ -2,14 +2,25 @@ if exists("b:current_syntax") && b:current_syntax =~# '\v<%(gotmpl|chezmoitmpl)>
   finish
 endif
 
+let s:cpo_save = &cpo
+" enable line continuation
+set cpo-=C
+
 unlet! b:current_syntax
 
 source <sfile>:h/gotmpl.vim
 
-syn keyword chezmoiTmplFunctions contained bitwarden bitwardenAttachment bitwardenFields decrypt encrypt exit fromJson fromYaml gitHubKeys gitHubLatestRelease
-syn keyword chezmoiTmplFunctions contained gopass gopassRaw include ioreg joinPath keepassxc keepassxcAttribute keyring lastpass lastpassRaw lookPath
-syn keyword chezmoiTmplFunctions contained mozillaInstallHash onepassword onepasswordDocument onepasswordDetailsFields onepasswordItemFields output
-syn keyword chezmoiTmplFunctions contained pass passRaw promptBool promptInt promptString secret secretJSON stat stdinIsATTY toYaml vault writeToStdout
+syn keyword chezmoiTmplFunctions contained
+\ awsSecretsManager awsSecretsManagerRaw bitwarden bitwardenAttachment
+\ bitwardenFields comment decrypt encrypt exit fromToml fromYaml gitHubKeys
+\ gitHubLatestRelease glob gopass gopassRaw include ioreg joinPath keepassxc
+\ keepassxcAttachment keepassxcAttribute keeper keeperDataFields
+\ keeperFindPassword keyring lastpass lastpassRaw lookPath mozillaInstallHash
+\ onepassword onepasswordDetailsFields onepasswordDocument
+\ onepasswordItemFields onepasswordRead output pass passFields passRaw
+\ promptBool promptBoolOnce promptInt promptIntOnce promptString
+\ promptStringOnce quoteList replaceAllRegex secret secretJSON stat stdinIsATTY
+\ toToml toYaml vault writeToStdout
 
 hi def link chezmoiTmplFunctions Function
 
@@ -20,5 +31,8 @@ if exists('b:chezmoi_original_syntax')
 else
   let b:current_syntax = 'chezmoitmpl'
 endif
+
+let &cpo = s:cpo_save
+unlet s:cpo_save
 
 " vim: sw=2 ts=2 et
