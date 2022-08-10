@@ -2,6 +2,10 @@ if exists("b:current_syntax") && b:current_syntax =~# '\v<%(gotmpl|chezmoitmpl)>
   finish
 endif
 
+let s:cpo_save = &cpo
+" enable line continuation
+set cpo-=C
+
 unlet! b:current_syntax
 
 source <sfile>:h/gotmpl.vim
@@ -27,5 +31,8 @@ if exists('b:chezmoi_original_syntax')
 else
   let b:current_syntax = 'chezmoitmpl'
 endif
+
+let &cpo = s:cpo_save
+unlet s:cpo_save
 
 " vim: sw=2 ts=2 et
