@@ -204,7 +204,7 @@ endfunction
 
 function! s:get_fixed_dir(original_abs_path) abort
   return substitute(fnamemodify(a:original_abs_path, ':h'),
-    \ '\C\v/\zs%(exact_)?%(private_)?%(readonly_)?\ze%(literal_)?', '', 'g')
+    \ '\C\v/\zs%(remove_)?%(exact_)?%(private_)?%(readonly_)?\ze%(literal_)?', '', 'g')
 endfunction
 
 let &cpo = s:cpo_save
