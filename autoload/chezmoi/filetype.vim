@@ -32,7 +32,7 @@ function! chezmoi#filetype#handle_chezmoi_filetype() abort
     endif
   elseif original_abs_path =~# s:special_path_patterns['ignore_remove']
     let b:chezmoi_target_path = original_abs_path
-    setfiletype chezmoitmpl
+    setfiletype conf.chezmoitmpl
     return
   elseif original_abs_path =~# s:special_path_patterns['templates']
     call s:disable_artifacts()
