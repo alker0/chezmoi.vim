@@ -109,7 +109,7 @@ endfunction
 function! s:get_special_path_patterns() abort
   " g:chezmoi#source_dir_path should be defined in /filetype.vim
   let dir_prefix = '^' . g:chezmoi#source_dir_path . '/\v'
-  let config_extensions = '\.%(json|yaml|toml|hcl|plist|properties)'
+  let config_extensions = '\.%(json|ya?ml|toml|hcl|plist|properties)'
   let other_dot_pattern = '%([^/]+/){-}\.'
   let patterns = {}
   let patterns.ignore_remove = dir_prefix . '\.chezmoi%(ignore|remove)$'
