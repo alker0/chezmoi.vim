@@ -153,6 +153,10 @@ function! s:enable_template_force() abort
   if empty(&filetype)
     setlocal filetype=chezmoitmpl
   elseif &filetype !~# '\<chezmoitmpl\>'
+    if exists('b:current_syntax')
+      let b:chezmoi_original_syntax = b:current_syntax
+    endif
+
     setlocal filetype+=.chezmoitmpl
   endif
 endfunction
