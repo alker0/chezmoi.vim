@@ -1,4 +1,4 @@
-if !exists('b:chezmoi_original_syntax') || b:chezmoi_original_syntax !~# '\v<sh>'
+if !exists('b:chezmoi_original_syntax') || b:chezmoi_original_syntax !~# '\v<%(sh|posix)>'
   finish
 endif
 
