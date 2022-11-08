@@ -108,7 +108,8 @@ endfunction
 
 function! s:get_special_path_patterns() abort
   " g:chezmoi#source_dir_path should be defined in /filetype.vim
-  let dir_prefix = '^\V' . g:chezmoi#source_dir_path . '/\v'
+  " and cannot have / suffixes and \ delimiters but include \ as entry name
+  let dir_prefix = '^\V' . escape(g:chezmoi#source_dir_path, '\') . '/\v'
   let config_extensions = '\.%(json|ya?ml|toml|hcl|plist|properties)'
   let other_dot_pattern = '%([^/]+/){-}\.'
   let patterns = {}

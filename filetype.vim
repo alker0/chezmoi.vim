@@ -3,6 +3,16 @@ if exists('g:chezmoi#_loaded')
 endif
 let g:chezmoi#_loaded = 1
 
+if has('unix') " `unix` also includes cygwin
+  function! s:fix_path_delims(text) abort
+    return a:text
+  endfunction
+else
+  function! s:fix_path_delims(text) abort
+    return tr(a:text, '\', '/')
+  endfunction
+endif
+
 if !exists('g:chezmoi#source_dir_path')
   let g:chezmoi#source_dir_path = ''
 
@@ -17,7 +27,7 @@ if !exists('g:chezmoi#source_dir_path')
 
     if executable( g:chezmoi#use_external )
       let g:chezmoi#use_external = exepath( g:chezmoi#use_external )
-      let g:chezmoi#source_dir_path = glob( substitute( system( shellescape(g:chezmoi#use_external) . ' source-path' ), '[\r\n]*$', '', '' ) )
+      let g:chezmoi#source_dir_path = glob(trim(system(shellescape(g:chezmoi#use_external) . ' source-path'), "\r\n", 2))
     else
       let g:chezmoi#use_external = ''
     endif
@@ -25,20 +35,17 @@ if !exists('g:chezmoi#source_dir_path')
 
   if empty(g:chezmoi#source_dir_path)
     if !empty($XDG_DATA_HOME)
-      let g:chezmoi#source_dir_path = substitute($XDG_DATA_HOME, '\\', '/', 'g') . '/chezmoi'
+      let g:chezmoi#source_dir_path = trim(s:fix_path_delims($XDG_DATA_HOME), '/', 2) . '/chezmoi'
     else
-      let g:chezmoi#source_dir_path = expand('~') . '/.local/share/chezmoi'
-    endif
-
-    if !has('unix') " `unix` also includes cygwin
-      let g:chezmoi#source_dir_path = substitute(g:chezmoi#source_dir_path, '\\', '/', 'g')
+      let g:chezmoi#source_dir_path = s:fix_path_delims(expand('~')) . '/.local/share/chezmoi'
     endif
 
     let s:chezmoi_root_file = glob( g:chezmoi#source_dir_path . "/.chezmoiroot" )
     if !empty( s:chezmoi_root_file )
-      let s:chezmoiroot = substitute( readfile( s:chezmoi_root_file, '', 1 )[0], '[\r\n]*$', '', '' )
-      let s:chezmoiroot = substitute( s:chezmoiroot, '\\', '/', 'g' )
-      let g:chezmoi#source_dir_path = substitute( g:chezmoi#source_dir_path, '[\\/]*$', '/' . s:chezmoiroot, '' )
+      let s:chezmoiroot = trim(readfile(s:chezmoi_root_file, '', 1)[0], "\r\n", 2)
+      let s:chezmoiroot = trim(s:chezmoiroot, '/', 2)
+      " g:chezmoi#source_dir_path has already trimmed suffixes of path delimiters
+      let g:chezmoi#source_dir_path = g:chezmoi#source_dir_path . '/' . s:chezmoiroot
       unlet s:chezmoiroot
     endif
     unlet s:chezmoi_root_file
@@ -47,13 +54,13 @@ else
   if g:chezmoi#source_dir_path[0] !=# '/'
     let g:chezmoi#source_dir_path = fnamemodify(g:chezmoi#source_dir_path, ':p')
   endif
-  let g:chezmoi#source_dir_path = trim(g:chezmoi#source_dir_path, '\/', 2)
+  let g:chezmoi#source_dir_path = trim(s:fix_path_delims(g:chezmoi#source_dir_path), '/', 2)
 endif
 
 augroup chezmoi_filetypedetect
   autocmd!
 
-  execute 'autocmd BufNewFile,BufRead '. g:chezmoi#source_dir_path . '/* call chezmoi#filetype#handle_chezmoi_filetype()'
+  execute 'autocmd BufNewFile,BufRead \V'. escape(g:chezmoi#source_dir_path, ' \') . '/\* call chezmoi#filetype#handle_chezmoi_filetype()'
 augroup END
 
 if has('unix')
