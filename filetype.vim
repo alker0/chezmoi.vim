@@ -43,6 +43,11 @@ if !exists('g:chezmoi#source_dir_path')
     endif
     unlet s:chezmoi_root_file
   endif
+else
+  if g:chezmoi#source_dir_path[0] !=# '/'
+    let g:chezmoi#source_dir_path = fnamemodify(g:chezmoi#source_dir_path, ':p')
+  endif
+  let g:chezmoi#source_dir_path = trim(g:chezmoi#source_dir_path, '\/', 2)
 endif
 
 augroup chezmoi_filetypedetect
