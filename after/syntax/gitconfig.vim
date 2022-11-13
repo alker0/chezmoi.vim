@@ -4,10 +4,9 @@ endif
 
 syn case match
 
-call chezmoi#syntax#addIntoSyntaxGroup('gitConfigComment', 'gitConfigString', 'gitConfigAssignment')
-syn region gitConfigVariableTmpl start=/{{/ end=/}}/ contained keepend contains=@goTmplActions nextgroup=gitConfigVariableBetweenTmpl,gitConfigVariableRightEnd,gitConfigVariableTmpl
+syn region gitConfigVariableTmpl start=/{{/ end=/}}/ contained keepend nextgroup=gitConfigVariableBetweenTmpl,gitConfigVariableRightEnd,gitConfigVariableTmpl
 syn match gitConfigVariable /^\s*\zs\a[a-z0-9-]*\ze{{/ nextgroup=gitConfigVariableTmpl
-syn match gitConfigVariableStartFromTmpl /^\s*\zs{{.*}}\ze[a-z0-9-]*\s*=/ keepend contains=gitConfigVariableTmpl nextgroup=gitConfigVariableRightEnd
+syn match gitConfigVariableStartFromTmpl /^\s*\ze{{.*}}[a-z0-9-]*\s*=/ keepend nextgroup=gitConfigVariableTmpl
 syn match gitConfigVariableBetweenTmpl /[a-z0-9-]\+\ze{{/ contained nextgroup=gitConfigVariableTmpl
 syn match gitConfigVariableRightEnd /\v[a-z0-9-]*\ze\s*%([=#;]|$)/ contained nextgroup=gitConfigAssignment skipwhite
 hi def link gitConfigVariableBetweenTmpl gitConfigVariableForTmpl

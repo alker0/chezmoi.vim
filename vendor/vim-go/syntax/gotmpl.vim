@@ -78,8 +78,8 @@ hi def link     goTmplVariable       Special
 syn cluster goTmplItems contains=@goTmplLiteral,goTmplControl,goTmplFunctions,goTmplVariable,goTmplIdentifier
 
 if !exists('b:tmpl_region_defined')
-  syn region goTmplAction start="{{" end="}}" contains=@goTmplItems
-  syn region goTmplComment start="{{\v(- )?/\*" end="\v\*/( -)?\V}}"
+  syn region goTmplAction start="{{" end="}}" contains=@goTmplItems containedin=ALLBUT,@goTmplActions,@goTmplItems
+  syn region goTmplComment start="{{\v(- )?/\*" end="\v\*/( -)?\V}}" containedin=ALLBUT,@goTmplActions,@goTmplItems
 endif
 unlet! b:tmpl_region_defined
 
