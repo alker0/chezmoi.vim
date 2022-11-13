@@ -100,6 +100,7 @@ function! s:handle_source_file(original_abs_path, options) abort
 
   if exists('b:chezmoi_original_filetype') && b:chezmoi_original_filetype !=# &filetype
     execute 'autocmd chezmoi_filetypedetect FileType <buffer> call s:keep_filetype("' . &filetype . '")'
+    autocmd BufReadPost <buffer> ++once autocmd! chezmoi_filetypedetect FileType <buffer=abuf>
   endif
 endfunction
 
@@ -185,11 +186,6 @@ function! s:enable_template_auto(original_path) abort
 endfunction
 
 function! s:keep_filetype(fixed_filetype)
-  if exists('v:vim_did_enter') && v:vim_did_enter
-    bufdo :autocmd! chezmoi_filetypedetect FileType <buffer>
-    return
-  endif
-
   let &filetype = a:fixed_filetype
 endfunction
 
