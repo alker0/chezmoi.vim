@@ -100,7 +100,7 @@ function! s:handle_source_file(original_abs_path, options) abort
 
   if exists('b:chezmoi_original_filetype') && b:chezmoi_original_filetype !=# &filetype
     execute 'autocmd chezmoi_filetypedetect FileType <buffer> call s:keep_filetype("' . &filetype . '")'
-    autocmd BufReadPost <buffer> ++once autocmd! chezmoi_filetypedetect FileType <buffer=abuf>
+    autocmd VimEnter,BufWinEnter,CmdLineEnter <buffer> ++once autocmd! chezmoi_filetypedetect FileType <buffer>
   endif
 endfunction
 
