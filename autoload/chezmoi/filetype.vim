@@ -119,12 +119,12 @@ function! s:get_special_path_patterns() abort
   let config_extensions = '\.%(json|ya?ml|toml|hcl|plist|properties)'
   let other_dot_pattern = '%([^/]+/){-}\.'
   let patterns = {}
-  let patterns.ignore_remove = dir_prefix . '\.chezmoi%(ignore|remove)$'
+  let patterns.ignore_remove = dir_prefix . '\.chezmoi%(ignore|remove)%(\.tmpl)?$'
   let patterns.templates = dir_prefix . '\.chezmoitemplates/.+'
   let patterns.scripts = dir_prefix . '\.chezmoiscripts/.+'
   let patterns.scripts_dot = dir_prefix . '\.chezmoiscripts/' . other_dot_pattern
   let patterns.data = dir_prefix . '\.chezmoidata' . config_extensions . '$'
-  let patterns.external = dir_prefix . '\.chezmoiexternal' . config_extensions . '$'
+  let patterns.external = dir_prefix . '\.chezmoiexternal' . config_extensions . '%(\.tmpl)?$'
   let patterns.config = dir_prefix . '\.chezmoi' . config_extensions . '\.tmpl$'
   " Ignoring below paths should not be a problem:
   " .chezmoiversion
