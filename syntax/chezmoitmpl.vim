@@ -12,15 +12,16 @@ source <sfile>:h/gotmpl.vim
 
 syn keyword chezmoiTmplFunctions contained
 \ awsSecretsManager awsSecretsManagerRaw bitwarden bitwardenAttachment
-\ bitwardenFields comment decrypt encrypt exit fromToml fromYaml gitHubKeys
-\ gitHubLatestRelease glob gopass gopassRaw include ioreg joinPath keepassxc
-\ keepassxcAttachment keepassxcAttribute keeper keeperDataFields
-\ keeperFindPassword keyring lastpass lastpassRaw lookPath mozillaInstallHash
-\ onepassword onepasswordDetailsFields onepasswordDocument
-\ onepasswordItemFields onepasswordRead output pass passFields passRaw
+\ bitwardenFields comment completion decrypt encrypt eqFold exit fromIni
+\ fromToml fromYaml gitHubKeys gitHubLatestRelease gitHubLatestTag glob gopass
+\ gopassRaw hexDecode hexEncode include includeTemplate ioreg joinPath
+\ keepassxc keepassxcAttachment keepassxcAttribute keeper keeperDataFields
+\ keeperFindPassword keyring lastpass lastpassRaw lookPath lstat
+\ mozillaInstallHash onepassword onepasswordDetailsFields onepasswordDocument
+\ onepasswordItemFields onepasswordRead output pass passFields passRaw passhole
 \ promptBool promptBoolOnce promptInt promptIntOnce promptString
-\ promptStringOnce quoteList replaceAllRegex secret secretJSON stat stdinIsATTY
-\ toToml toYaml vault writeToStdout
+\ promptStringOnce quoteList replaceAllRegex secret secretJSON setValueAtPath
+\ stat stdinIsATTY toIni toToml toYaml vault writeToStdout
 
 hi def link chezmoiTmplFunctions Function
 
