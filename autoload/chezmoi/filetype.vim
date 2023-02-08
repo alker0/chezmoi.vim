@@ -6,9 +6,10 @@ set cpo-=l
 set cpo-=\
 
 function! chezmoi#filetype#handle_chezmoi_filetype() abort
-  if did_filetype() || exists('b:chezmoi_detecting_fixed')
+  if exists('b:chezmoi_handling') || exists('b:chezmoi_detecting_fixed')
     return
   endif
+  let b:chezmoi_handling = 1
 
   call s:reset_buf_vars()
   let original_abs_path = expand('<amatch>:p')
@@ -54,9 +55,10 @@ function! chezmoi#filetype#handle_chezmoi_filetype() abort
 endfunction
 
 function! chezmoi#filetype#handle_chezmoi_filetype_hardlink() abort
-  if did_filetype() || exists('b:chezmoi_detecting_fixed')
+  if exists('b:chezmoi_handling') || exists('b:chezmoi_detecting_fixed')
     return
   endif
+  let b:chezmoi_handling = 1
 
   call s:reset_buf_vars()
   let original_abs_path = expand('<amatch>:p')
@@ -103,10 +105,14 @@ function! s:handle_source_file(original_abs_path, options) abort
     execute 'autocmd chezmoi_filetypedetect FileType <buffer> call s:keep_filetype("' . &filetype . '")'
     autocmd VimEnter,BufWinEnter,CmdLineEnter <buffer> ++once autocmd! chezmoi_filetypedetect FileType <buffer>
   endif
+
+  unlet! b:chezmoi_handling
 endfunction
 
 function! s:reset_buf_vars() abort
+  " unlet! b:chezmoi_handling
   " unlet! b:chezmoi_detecting_fixed
+  unlet! b:chezmoi_source_path
   unlet! b:chezmoi_target_path
   unlet! b:chezmoi_original_filetype
   unlet! b:chezmoi_original_syntax
@@ -153,7 +159,51 @@ function! s:run_default_detect(detect_target) abort
   endif
 
   let b:chezmoi_detecting_fixed = 1
-  execute 'doau filetypedetect BufRead ' . fnameescape(a:detect_target)
+
+  if exists('g:chezmoi#use_tmp_buffer') && g:chezmoi#use_tmp_buffer == v:true
+    " Save current status.
+    let evignore_save = &eventignore
+    let bufhidden_save = &bufhidden
+    let l:cpo_save = &cpo
+
+    let bufnr_org = bufnr()
+
+    try
+      set eventignore=all
+
+      " Enable to move to other buffer.
+      set bufhidden=hide
+
+      " Avoid inheritance options on entering tmp buffer.
+      set cpo-=S
+
+      execute bufnr('CHEZMOI_DETECT_' . bufnr_org, 1) . 'buffer'
+      set buftype=nofile
+      set bufhidden=wipe
+
+      " Copy contents from original buffer.
+      silent put = getbufline(bufnr_org, 1, '$')
+
+      set eventignore=FileType,Syntax
+      execute 'doau filetypedetect BufRead ' . fnameescape(a:detect_target)
+      set eventignore=all
+
+      " Copy filetype to original buffer.
+      call setbufvar(bufnr_org, '&filetype', &filetype)
+
+      " Return to original buffer and also cleanup
+      " tmp buffer automatically because `bufhidden=wipe`.
+      execute bufnr_org . 'buffer'
+    finally
+      " Restore status.
+      let &eventignore = evignore_save
+      let &bufhidden = bufhidden_save
+      let &cpo = l:cpo_save
+    endtry
+  else
+    execute 'doau filetypedetect BufRead ' . fnameescape(a:detect_target)
+  endif
+
   unlet b:chezmoi_detecting_fixed
 endfunction
 
