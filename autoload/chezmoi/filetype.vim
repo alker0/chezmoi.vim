@@ -183,6 +183,7 @@ function! s:run_default_detect(detect_target) abort
 
       " Copy contents from original buffer.
       silent put = getbufline(bufnr_org, 1, '$')
+      silent 1delete
 
       set eventignore=FileType,Syntax
       execute 'doau filetypedetect BufRead ' . fnameescape(a:detect_target)
