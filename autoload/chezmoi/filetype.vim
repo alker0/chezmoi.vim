@@ -193,7 +193,7 @@ function! s:run_default_detect(detect_target) abort
 
       " Return to original buffer and also cleanup
       " tmp buffer automatically because `bufhidden=wipe`.
-      execute bufnr_org . 'buffer'
+      silent execute bufnr_org . 'buffer'
     finally
       " Restore status.
       let &eventignore = evignore_save
