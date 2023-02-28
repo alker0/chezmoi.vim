@@ -24,7 +24,7 @@
 
 [chezmoi](https://github.com/twpayne/chezmoi) makes it much easier for you to manage your dotfiles. `chezmoi` uses special file naming (e.g. `dot_bashrc`) but you get still a syntax highlighting support because `chezmoi edit` resolves special naming before passing files to your editor. However you miss a correct highlighting in the following cases:
 - When you edit directly dotfiles without `chezmoi edit`, `vim` does not highlight it.
-- If you use template files (the powerful feature of `chezmoi`), `vim` losses an original syntax highlighting
+- If you use [template](https://www.chezmoi.io/user-guide/templating) files (the powerful feature of `chezmoi`), `vim` losses an original syntax highlighting
 
 This plugin solves those problems.
 
