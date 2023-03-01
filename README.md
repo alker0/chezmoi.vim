@@ -24,7 +24,7 @@
 
 [chezmoi](https://github.com/twpayne/chezmoi) makes it much easier for you to manage your dotfiles. `chezmoi` uses special file naming (e.g. `dot_bashrc`) but you get still a syntax highlighting support because `chezmoi edit` resolves special naming before passing files to your editor. However you miss a correct highlighting in the following cases:
 - When you edit directly dotfiles without `chezmoi edit`, `vim` does not highlight it.
-- If you use template files (the powerful feature of `chezmoi`), `vim` losses an original syntax highlighting
+- If you use [template](https://www.chezmoi.io/user-guide/templating) files (the powerful feature of `chezmoi`), `vim` losses an original syntax highlighting
 
 This plugin solves those problems.
 
@@ -66,7 +66,7 @@ $ vim dot_bashrc
 ```
 This plugin resolves the special prefixes automatically therefore highlighting for bash is applied correctly.
 
-If the file is chezmoi template, this plugin merges syntax highlighting as follows:
+If the file is a chezmoi template, this plugin merges syntax highlighting as follows:
 * `dot_vimrc.tmpl` => `vim` + `go-template`
 * `.chezmoitemplates/foo.toml` => `toml` + `go-template`
 
@@ -81,7 +81,7 @@ If the file is chezmoi template, this plugin merges syntax highlighting as follo
 
 Note:
 * To enable the use of the external chezmoi binary, set the `g:chezmoi#use_external` variable. This variable must be set in `.vimrc` file, before the plugin is sourced. The value must be either a valid path to the binary, or just the binary name, if it can be found in `$PATH`. Alternatively, the value can be set to 1, in which case the plugin will try to detect the binary name automatically. After the plugin is sourced, the value of this variable may change. It will contain either the full name of the chezmoi binary that is used, or empty if the external chezmoi can not be used for some reason.
-* If you get some problem about ordering of filetype detection, try setting the `g:chezmoi#use_tmp_buffer` variable with `1`. The feature should make it working correctly with any ordering, via using temporary buffer for avoiding limitation of Vim/Neovim's builtin filetype detection. The builtin detection use `setfiletype` ex command that works only once per buffer, so if using only same buffer (that is current default behavior of this plugin), asking Vim to run builtin detection with resolved path works only before calling `setfiletype` with wrong filetype. But if this plugin create and use a new temporary buffer every detection, `setfiletype` works again so this plugin can get resolved filetype from builtin detection anytime.
+* If you get some problem about ordering of filetype detection, try setting the `g:chezmoi#use_tmp_buffer` variable with `1`. The feature should make it working correctly with any ordering, via using temporary buffer for avoiding limitation of Vim/Neovim's builtin filetype detection. The builtin detection use `setfiletype` ex command that works only once per buffer, so if using only same buffer (that is current default behavior of this plugin), asking Vim to run builtin detection with resolved path works only before calling `setfiletype` with wrong filetype. But if this plugin creates and uses a new temporary buffer every detection, `setfiletype` works again so this plugin can get resolved filetype from builtin detection anytime.
 
 # License
 The MIT License but includes works of the BSD License.
