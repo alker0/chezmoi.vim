@@ -69,8 +69,9 @@ if has('unix')
   else
     autocmd chezmoi_filetypedetect  BufNewFile,BufRead $TMPDIR/chezmoi-edit* call chezmoi#filetype#handle_chezmoi_filetype_hardlink()
   endif
-" elseif !empty($TEMP) " for windows
-"   autocmd chezmoi_filetypedetect  BufNewFile,BufRead $TEMP/chezmoi-edit* call chezmoi#filetype#handle_chezmoi_filetype_hardlink()
+elseif has('win32')
+  let s:source_dir_pattern = g:chezmoi#source_dir_path . '/*.tmpl'
+  execute 'autocmd BufNewFile,BufRead ' . s:source_dir_pattern . ' call chezmoi#filetype#handle_chezmoi_filetype()'
 endif
 
 " vim: sw=2 ts=2 et
