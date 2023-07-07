@@ -57,10 +57,17 @@ else
   let g:chezmoi#source_dir_path = trim(s:fix_path_delims(g:chezmoi#source_dir_path), '/', 2)
 endif
 
+if has('unix')
+  let s:source_dir_pattern = '\V' . escape(g:chezmoi#source_dir_path, ' \') . '/\*'
+else
+  " `\V` mode makes slash(/) not work as path delimiter on Windows
+  let s:source_dir_pattern = '\c' . escape(g:chezmoi#source_dir_path, '.~$[ \') . '/*'
+endif
+
 augroup chezmoi_filetypedetect
   autocmd!
 
-  execute 'autocmd BufNewFile,BufRead \V'. escape(g:chezmoi#source_dir_path, ' \') . '/\* call chezmoi#filetype#handle_chezmoi_filetype()'
+  execute 'autocmd BufNewFile,BufRead '. s:source_dir_pattern . ' call chezmoi#filetype#handle_chezmoi_filetype()'
 augroup END
 
 if has('unix')
