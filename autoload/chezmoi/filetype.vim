@@ -43,7 +43,13 @@ function! chezmoi#filetype#handle_chezmoi_filetype() abort
   elseif original_abs_path =~# s:special_path_patterns['config'] ||
       \ original_abs_path =~# s:special_path_patterns['data']
     let options.need_name_fix = v:false
+  elseif original_abs_path =~# s:special_path_patterns['datas']
+    let options.need_name_fix = v:false
+    let options.enable_tmpl_force = v:true
   elseif original_abs_path =~# s:special_path_patterns['external']
+    let options.need_name_fix = v:false
+    let options.enable_tmpl_force = v:true
+  elseif original_abs_path =~# s:special_path_patterns['externals']
     let options.need_name_fix = v:false
     let options.enable_tmpl_force = v:true
   elseif original_abs_path =~# s:special_path_patterns['external_dir'] ||
@@ -130,7 +136,9 @@ function! s:get_special_path_patterns() abort
   let patterns.scripts = dir_prefix . '\.chezmoiscripts/.+'
   let patterns.scripts_dot = dir_prefix . '\.chezmoiscripts/' . other_dot_pattern
   let patterns.data = dir_prefix . '\.chezmoidata' . config_extensions . '$'
+  let patterns.datas = dir_prefix . '\.chezmoidata/.+'
   let patterns.external = dir_prefix . '\.chezmoiexternal' . config_extensions . '%(\.tmpl)?$'
+  let patterns.externals = dir_prefix . '\.chezmoiexternals/.+'
   let patterns.config = dir_prefix . '\.chezmoi' . config_extensions . '\.tmpl$'
   " Ignoring below paths should not be a problem:
   " .chezmoiversion
