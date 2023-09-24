@@ -38,11 +38,13 @@ Furthermore, **with keeping original highlighting**, this plugin applies that of
 
 # Install
 
-:warning: Notes: You must load this plugin before the following timings:
+:warning: You must load this plugin before the following timings:
 * Calling `filetype on`, `syntax enable` or `syntax on`
 * Loading other plugins that include `filetype.vim`
 * End of `vimrc`
 * End of `init.vim` if you use neovim
+
+However enabling the `g:chezmoi#use_tmp_buffer` experimental option makes you free from the above limitation (see the [Options section](#options) for more details).
 
 If you use [Vim 8 packages](http://vimhelp.appspot.com/repeat.txt.html#packages):
 ```sh
@@ -53,7 +55,7 @@ And then insert this line your `vimrc` with taking the above notes into consider
 packadd chezmoi.vim
 ```
 
-You can also use the favorite plugin manager, in that case, make your plugin manager load this plugin earlier than others. You must **not** load this plugin lazily.
+You can also use the favorite plugin manager but you must **not** load this plugin lazily for detecting filetype correctly. You also have to load `chezmoi.vim` earlier than others unless you enable the `g:chezmoi#use_tmp_buffer` option.
 
 # Usage
 
