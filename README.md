@@ -18,6 +18,7 @@
 - [Install](#install)
 - [Usage](#usage)
 - [Options](#options)
+- [FAQ](#faq)
 - [License](#license)
 
 # Why
