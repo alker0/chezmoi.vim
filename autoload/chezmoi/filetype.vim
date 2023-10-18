@@ -6,7 +6,8 @@ set cpo-=l
 set cpo-=\
 
 function! chezmoi#filetype#handle_chezmoi_filetype() abort
-  if exists('b:chezmoi_handling') || exists('b:chezmoi_detecting_fixed')
+  if exists('b:chezmoi_handling') || exists('b:chezmoi_detecting_fixed') ||
+      \ &buftype ==# 'quickfix'
     return
   endif
   let b:chezmoi_handling = 1
