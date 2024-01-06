@@ -109,8 +109,13 @@ function! s:handle_source_file(original_abs_path, options) abort
   endif
 
   if exists('b:chezmoi_original_filetype') && b:chezmoi_original_filetype !=# &filetype
-    execute 'autocmd chezmoi_filetypedetect FileType <buffer> call s:keep_filetype("' . &filetype . '")'
-    autocmd VimEnter,BufWinEnter,CmdLineEnter <buffer> ++once autocmd! chezmoi_filetypedetect FileType <buffer>
+    " `++once` option has supported since the 8.1.1113 patch.
+    " autocmd chezmoi_filetypedetect VimEnter,BufWinEnter,CmdLineEnter <buffer> ++once autocmd! chezmoi_filetypedetect FileType <buffer>
+    augroup chezmoi_keepfiletype
+      autocmd! * <buffer>
+      execute 'autocmd FileType <buffer> call s:keep_filetype("' . &filetype . '")'
+      autocmd VimEnter,BufWinEnter,CmdLineEnter <buffer> autocmd! chezmoi_keepfiletype * <buffer>
+    augroup END
   endif
 
   unlet! b:chezmoi_handling
