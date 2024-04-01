@@ -179,11 +179,17 @@ function! s:run_default_detect(detect_target) abort
     let evignore_save = &eventignore
     let bufhidden_save = &bufhidden
     let l:cpo_save = &cpo
+    let l:clipboard_save = &clipboard
+    let l:reg_content_save = getreg('"')
+    let l:reg_type_save = getregtype('"')
 
     let bufnr_org = bufnr()
 
     try
       set eventignore=all
+
+      " Disable clipboard
+      set clipboard=
 
       " Enable to move to other buffer.
       set bufhidden=hide
@@ -214,6 +220,8 @@ function! s:run_default_detect(detect_target) abort
       let &eventignore = evignore_save
       let &bufhidden = bufhidden_save
       let &cpo = l:cpo_save
+      call setreg('""', l:reg_content_save, l:reg_type_save)
+      let &clipboard = l:clipboard_save
     endtry
   else
     execute 'doau filetypedetect BufRead ' . fnameescape(a:detect_target)
