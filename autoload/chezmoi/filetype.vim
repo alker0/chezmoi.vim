@@ -174,7 +174,11 @@ function! s:run_default_detect(detect_target) abort
 
   let b:chezmoi_detecting_fixed = 1
 
-  if exists('g:chezmoi#use_tmp_buffer') && g:chezmoi#use_tmp_buffer == v:true
+  let bufnr_org = bufnr()
+  if bufexists(a:detect_target)
+    " Copy filetype to original buffer from an existant buffer.
+    call setbufvar(bufnr_org, '&filetype', getbufvar(a:detect_target, '&filetype'))
+  elseif exists('g:chezmoi#use_tmp_buffer') && g:chezmoi#use_tmp_buffer == v:true
     " Save current status.
     let evignore_save = &eventignore
     let bufhidden_save = &bufhidden
@@ -183,7 +187,8 @@ function! s:run_default_detect(detect_target) abort
     let l:reg_content_save = getreg('"')
     let l:reg_type_save = getregtype('"')
 
-    let bufnr_org = bufnr()
+    let bufname_tmp = 'CHEZMOI_DETECT_' . bufnr_org
+    let escaped_target_filename = fnameescape(a:detect_target)
 
     try
       set eventignore=all
@@ -197,16 +202,26 @@ function! s:run_default_detect(detect_target) abort
       " Avoid inheritance options on entering tmp buffer.
       set cpo-=S
 
-      execute bufnr('CHEZMOI_DETECT_' . bufnr_org, 1) . 'buffer'
+      silent execute 'keepalt ' . bufnr(bufname_tmp, 1) . 'buffer'
       set buftype=nofile
       set bufhidden=wipe
+
+      " Set the current buffer name to the target file name
+      " of chezmoi because Neovim v0.10 uses a buffer name instead
+      " of a matched path name when the filetype detection in
+      " `filetypedetect` autocmd.
+      " See https://github.com/neovim/neovim/issues/27914
+      silent execute 'keepalt file ' . escaped_target_filename
+
+      " Delete another tmp buffer that running `:file` creates.
+      silent execute 'bwipeout ' . bufname_tmp
 
       " Copy contents from original buffer.
       silent put = getbufline(bufnr_org, 1, '$')
       silent 1delete
 
       set eventignore=FileType,Syntax
-      execute 'doau filetypedetect BufRead ' . fnameescape(a:detect_target)
+      execute 'doau filetypedetect BufRead ' . escaped_target_filename
       set eventignore=all
 
       " Copy filetype to original buffer.
@@ -214,7 +229,7 @@ function! s:run_default_detect(detect_target) abort
 
       " Return to original buffer and also cleanup
       " tmp buffer automatically because `bufhidden=wipe`.
-      silent execute bufnr_org . 'buffer'
+      silent execute 'keepalt ' . bufnr_org . 'buffer'
     finally
       " Restore status.
       let &eventignore = evignore_save
