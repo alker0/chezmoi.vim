@@ -100,12 +100,32 @@ function! s:handle_source_file(original_abs_path, options) abort
 
   let b:chezmoi_source_path = get(a:options, 'source_path', b:chezmoi_default_detect_target)
 
+  augroup chezmoi_cancel_manual_filetype_autocmd
+    autocmd! * <buffer>
+    autocmd FileType <buffer> unlet! b:chezmoi_need_manual_filetype_autocmd
+    autocmd VimEnter,BufWinEnter,CmdLineEnter <buffer> autocmd! chezmoi_cancel_manual_filetype_autocmd * <buffer>
+  augroup END
+
+  let l:filetype_save = &filetype
+
   call s:run_default_detect(b:chezmoi_default_detect_target)
 
   if a:options.enable_tmpl_force
     call s:enable_template_force()
   else
     call s:enable_template_auto(a:original_abs_path)
+  endif
+
+  if exists('b:chezmoi_need_manual_filetype_autocmd')
+    unlet! b:chezmoi_need_manual_filetype_autocmd
+
+    if &filetype !=# l:filetype_save
+      if empty(&filetype)
+        doau FileType {}
+      else
+        execute 'doau FileType ' . &filetype
+      endif
+    endif
   endif
 
   if exists('b:chezmoi_original_filetype') && b:chezmoi_original_filetype !=# &filetype
@@ -226,6 +246,7 @@ function! s:run_default_detect(detect_target) abort
 
       " Copy filetype to original buffer.
       call setbufvar(bufnr_org, '&filetype', &filetype)
+      call setbufvar(bufnr_org, 'chezmoi_need_manual_filetype_autocmd', v:true)
 
       " Return to original buffer and also cleanup
       " tmp buffer automatically because `bufhidden=wipe`.
@@ -249,9 +270,7 @@ function! s:enable_template_force() abort
   if empty(&filetype)
     setlocal filetype=chezmoitmpl
   elseif &filetype !~# '\<chezmoitmpl\>'
-    if exists('b:current_syntax')
-      let b:chezmoi_original_syntax = b:current_syntax
-    endif
+    let b:chezmoi_original_syntax = substitute(&filetype, '\.', '+', 'g')
 
     setlocal filetype+=.chezmoitmpl
   endif
@@ -267,9 +286,7 @@ function! s:enable_template_auto(original_path) abort
   if empty(b:chezmoi_original_filetype) || b:chezmoi_original_filetype ==# 'chezmoitmpl'
     setlocal filetype=chezmoitmpl
   else
-    if exists('b:current_syntax')
-      let b:chezmoi_original_syntax = b:current_syntax
-    endif
+    let b:chezmoi_original_syntax = substitute(&filetype, '\.', '+', 'g')
 
     setlocal filetype+=.chezmoitmpl
   endif
