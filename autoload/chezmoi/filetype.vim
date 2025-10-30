@@ -195,7 +195,7 @@ function! s:run_default_detect(detect_target) abort
   let b:chezmoi_detecting_fixed = 1
 
   let bufnr_org = bufnr()
-  if bufexists(a:detect_target) && bufnr(a:detect_target) != bufnr_org
+  if bufexists(a:detect_target)
     " Copy filetype to original buffer from an existant buffer.
     call setbufvar(bufnr_org, '&filetype', getbufvar(a:detect_target, '&filetype'))
   elseif exists('g:chezmoi#use_tmp_buffer') && g:chezmoi#use_tmp_buffer == v:true
