@@ -196,8 +196,14 @@ function! s:run_default_detect(detect_target) abort
 
   let bufnr_org = bufnr()
   if bufexists(a:detect_target)
-    " Copy filetype to original buffer from an existant buffer.
-    call setbufvar(bufnr_org, '&filetype', getbufvar(a:detect_target, '&filetype'))
+    if (bufnr(a:detect_target) == bufnr_org)
+      " For non-chezmoi-template files and chezmoi-template files without
+      " `.tmpl` suffix, the file's own path is used as the detection target.
+      execute 'doau filetypedetect BufRead ' . fnameescape(a:detect_target)
+    else
+      " Copy filetype to original buffer from an existant buffer.
+      call setbufvar(bufnr_org, '&filetype', getbufvar(a:detect_target, '&filetype'))
+    endif
   elseif exists('g:chezmoi#use_tmp_buffer') && g:chezmoi#use_tmp_buffer == v:true
     " Save current status.
     let evignore_save = &eventignore
