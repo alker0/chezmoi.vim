@@ -19,6 +19,7 @@
 - [Usage](#usage)
 - [Options](#options)
 - [FAQ](#faq)
+- [Contributing](#contributing)
 - [License](#license)
 
 # Why
@@ -151,6 +152,16 @@ require('nvim-treesitter.configs').setup({
   },
 })
 ```
+
+# Contributing
+
+Contributions are welcome! Adding newly released chezmoi template functions to
+`syntax/chezmoitmpl.vim` is a great first contribution.
+
+AI-assisted contributions are allowed under conditions (disclosure of the tool
+and scope in the PR, human responsibility for understanding the code, and
+verification in both Vim and Neovim). Please read [CONTRIBUTING.md](CONTRIBUTING.md)
+before opening a pull request.
 
 # License
 The MIT License but includes works of the BSD License.
