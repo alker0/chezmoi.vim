@@ -13,7 +13,7 @@
 
 # Table of contents
 
-- [Why](#why)
+- [Motivation](#motivation)
 - [Features](#features)
 - [Requirements](#requirements)
 - [Install](#install)
@@ -23,7 +23,7 @@
 - [Contributing](#contributing)
 - [License](#license)
 
-# Why
+# Motivation
 
 [chezmoi](https://github.com/twpayne/chezmoi) makes it much easier to manage your dotfiles. `chezmoi` uses special file naming (e.g. `dot_bashrc`), but you still get syntax highlighting support because `chezmoi edit` resolves the special naming before passing files to your editor. However, you lose correct highlighting in the following cases:
 - When you edit dotfiles directly without `chezmoi edit`, `vim` does not highlight them.
@@ -57,15 +57,17 @@ This is not an exhaustive list; the goal is to cover chezmoi's common naming con
 
   The plugin relies on a few relatively recent built-in functions — most notably `flatten()` (Vim 8.2.2449 / Neovim 0.6.0) and the `{dir}` argument of `trim()` (Vim 8.2.1042) — so earlier versions are not supported.
 
-* **Platforms.** The plugin is developed and tested on Unix-like systems and works there as the primary target. It is *expected* to work on Windows as well — including native Windows, WSL, Git Bash and MSYS2 — but those environments, together with the various plugin managers and the `chezmoi` binary itself, can behave subtly differently. Testing every combination is impractical, so Windows is supported on a best-effort basis **without guarantees**. (In particular, the hardlink-based `chezmoi edit` detection described in [Usage](#usage) is currently enabled on Unix only.)
+> [!NOTE]
+> **Platforms.** The plugin is developed and tested on Unix-like systems and works there as the primary target. It is *expected* to work on Windows as well — including native Windows, WSL, Git Bash and MSYS2 — but those environments, together with the various plugin managers and the `chezmoi` binary itself, can behave subtly differently. Testing every combination is impractical, so Windows is supported on a best-effort basis **without guarantees**. (In particular, the hardlink-based `chezmoi edit` detection described in [Usage](#usage) is currently enabled on Unix only.)
 
 # Install
 
-:warning: You must load this plugin before any of the following:
-* Calling `filetype on`, `syntax enable` or `syntax on`
-* Loading other plugins that include `filetype.vim`
-* The end of your `vimrc`
-* The end of your `init.vim` if you use Neovim
+> [!WARNING]
+> You must load this plugin before any of the following:
+> * Calling `filetype on`, `syntax enable` or `syntax on`
+> * Loading other plugins that include `filetype.vim`
+> * The end of your `vimrc`
+> * The end of your `init.vim` if you use Neovim
 
 However, enabling the experimental `g:chezmoi#use_tmp_buffer` option frees you from the limitation above (see the [Options section](#options) for more details).
 
@@ -129,7 +131,8 @@ use {
 }
 ```
 
-> **Tip for Neovim plugin managers:** enabling `g:chezmoi#use_tmp_buffer` is the simplest way to avoid every load-ordering problem, because it removes the requirement to load `chezmoi.vim` before other plugins.
+> [!TIP]
+> For Neovim plugin managers, enabling `g:chezmoi#use_tmp_buffer` is the simplest way to avoid every load-ordering problem, because it removes the requirement to load `chezmoi.vim` before other plugins.
 
 # Usage
 
