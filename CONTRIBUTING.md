@@ -78,6 +78,31 @@ submit it.
 
 ---
 
+## Editor compatibility
+
+The plugin targets **Vim 8.2.2449+** and **Neovim 0.6.0+**. This baseline is a
+deliberate trade-off, not an accident — the plugin intentionally avoids some
+newer conveniences (for example, it works around `++once`, added in Vim
+8.1.1113, with an `augroup`) to keep the floor as low as is practical.
+
+Today that floor is set by two built-ins:
+
+| Built-in | Introduced | Used in |
+| --- | --- | --- |
+| `trim({text}, {mask}, {dir})` — the third `{dir}` argument | Vim 8.2.1042 | `filetype.vim` (stripping trailing path delimiters / CR-LF) |
+| `flatten()` | Vim 8.2.2449 / Neovim 0.6.0 | `syntax/chezmoitmpl.vim` (combining keyword lists) |
+
+When contributing to the core or syntax files, please:
+
+- **Avoid raising the floor** without a clear reason. Prefer functions and
+  syntax that already work on the versions above. If a change genuinely needs a
+  newer built-in, call it out in the PR so the requirement can be discussed and
+  the README/`filetype.vim` note updated together.
+- **Lowering the floor is welcome** if it is clean. Both built-ins above can be
+  replaced (e.g. `trim(..., {dir})` with a `substitute()`, `flatten()` with
+  `split()`/`map()`); if you do this, update the comment in `filetype.vim` and
+  the requirement in the README to match.
+
 ## Updating `syntax/chezmoitmpl.vim`
 
 `syntax/chezmoitmpl.vim` highlights chezmoi's own template functions on top of

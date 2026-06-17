@@ -150,7 +150,9 @@ unlet! b:current_syntax
 
 source <sfile>:h/gotmpl.vim
 
-" Combine all keywords in one line
+" Combine all keywords in one line.
+" flatten() requires Vim 8.2.2449+ / Neovim 0.6.0+ (the plugin's minimum
+" supported versions; see the note in filetype.vim).
 let s:chezmoiTmplFunctionsCombined = flatten([
   \ s:onepasswordKeywords,
   \ s:awsKeywords,

@@ -53,9 +53,7 @@ This is not an exhaustive list; the goal is to cover chezmoi's common naming con
 
 # Requirements
 
-* **Vim 8.2.2449 or later**, or **Neovim 0.6.0 or later**.
-
-  The plugin relies on a few relatively recent built-in functions — most notably `flatten()` (Vim 8.2.2449 / Neovim 0.6.0) and the `{dir}` argument of `trim()` (Vim 8.2.1042) — so earlier versions are not supported.
+* **Vim 8.2.2449 or later**, or **Neovim 0.6.0 or later.** Earlier versions lack some built-in functions the plugin depends on.
 
 > [!NOTE]
 > **Platforms.** Unix-like systems are the primary, tested target. Windows (native, WSL, Git Bash, MSYS2) is *expected* to work, but is supported on a best-effort basis **without guarantees** — see [the FAQ](#faq-4) for why. (The hardlink-based `chezmoi edit` detection is currently enabled on Unix only.)

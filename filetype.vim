@@ -1,3 +1,11 @@
+" Minimum supported versions: Vim 8.2.2449+ / Neovim 0.6.0+.
+" Two built-ins set this floor:
+"   - trim()'s third {dir} argument (Vim 8.2.1042), used throughout this file
+"     to strip trailing path delimiters / CR-LF.
+"   - flatten() (Vim 8.2.2449 / Neovim 0.6.0), used in syntax/chezmoitmpl.vim.
+" If you ever need to lower the floor, both can be replaced (e.g. trim with a
+" substitute(), flatten with split()+map()); keep this note in sync.
+
 if exists('g:chezmoi#_loaded')
   finish
 endif
