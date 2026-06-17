@@ -58,7 +58,7 @@ This is not an exhaustive list; the goal is to cover chezmoi's common naming con
   The plugin relies on a few relatively recent built-in functions — most notably `flatten()` (Vim 8.2.2449 / Neovim 0.6.0) and the `{dir}` argument of `trim()` (Vim 8.2.1042) — so earlier versions are not supported.
 
 > [!NOTE]
-> **Platforms.** The plugin is developed and tested on Unix-like systems and works there as the primary target. It is *expected* to work on Windows as well — including native Windows, WSL, Git Bash and MSYS2 — but those environments, together with the various plugin managers and the `chezmoi` binary itself, can behave subtly differently. Testing every combination is impractical, so Windows is supported on a best-effort basis **without guarantees**. (In particular, the hardlink-based `chezmoi edit` detection described in [Usage](#usage) is currently enabled on Unix only.)
+> **Platforms.** Unix-like systems are the primary, tested target. Windows (native, WSL, Git Bash, MSYS2) is *expected* to work, but is supported on a best-effort basis **without guarantees** — see [the FAQ](#faq-4) for why. (The hardlink-based `chezmoi edit` detection is currently enabled on Unix only.)
 
 # Install
 
@@ -159,11 +159,20 @@ If the file is a chezmoi template, this plugin merges syntax highlighting as fol
 | `g:chezmoi#use_tmp_buffer`        | 0 | (experimental) Setting 1 makes this plugin create and use a temporary buffer so that builtin filetype detection can override a wrong filetype |
 
 Note:
-* `g:chezmoi#detect_ignore_pattern` is an intentional **escape hatch**. The files this plugin hooks into live in your dotfiles repository, which may contain sensitive information, so a misdetection or misbehaviour could cause a serious incident. This option lets you turn detection off for arbitrary paths at any time — keep it in mind as a safety valve if the plugin ever interferes with a file you care about. For example:
+* `g:chezmoi#detect_ignore_pattern` is an intentional **escape hatch**. The files this plugin hooks into live in your dotfiles repository, which may contain sensitive information, so a misdetection or misbehaviour could cause a serious incident. This option lets you turn detection off for arbitrary paths at any time — keep it in mind as a safety valve if the plugin ever interferes with a file you care about.
+
+  The value is a **Vim regular expression** (a string, in Vim's default "magic" syntax — not a glob and not PCRE). It is tested against each file's **absolute path**, **case-sensitively** (`=~#`); if the pattern matches, detection is skipped for that file. For example:
   ```vim
-  " Skip detection for everything under a particular subtree.
+  " Skip detection for everything under a directory named `secret`.
   let g:chezmoi#detect_ignore_pattern = '/secret/'
+
+  " Skip a specific file (`.` matches any character, so escape it as `\.`).
+  let g:chezmoi#detect_ignore_pattern = '/dot_netrc\.tmpl$'
+
+  " Combine multiple patterns with `\|` (alternation).
+  let g:chezmoi#detect_ignore_pattern = '/secret/\|/private_dot_ssh/'
   ```
+  Leave it unset (rather than setting it to an empty string) when you don't need it: an empty pattern reuses Vim's last search pattern, which can match unexpectedly.
 * To enable the use of the external chezmoi binary, set the `g:chezmoi#use_external` variable. This variable must be set in your `.vimrc` file, before the plugin is sourced. The value must be either a valid path to the binary, or just the binary name if it can be found in `$PATH`. Alternatively, the value can be set to 1, in which case the plugin will try to detect the binary name automatically. After the plugin is sourced, the value of this variable may change. It will contain either the full name of the chezmoi binary that is used, or empty if the external chezmoi cannot be used for some reason.
 * If you have a problem with the ordering of filetype detection, try setting the `g:chezmoi#use_tmp_buffer` variable to `1`. This feature should make it work correctly with any ordering, by using a temporary buffer to avoid a limitation of Vim/Neovim's builtin filetype detection. The builtin detection uses the `setfiletype` ex command, which works only once per buffer; so if only the same buffer is used (the current default behaviour of this plugin), asking Vim to run builtin detection with the resolved path works only before `setfiletype` is called with a wrong filetype. But if this plugin creates and uses a new temporary buffer for every detection, `setfiletype` works again, so this plugin can get the resolved filetype from builtin detection at any time.
 
@@ -172,6 +181,7 @@ Note:
 - [How can I make it work even if my chezmoi source directory isn't the default path?](#faq-1)
 - [How can I make it work with `lazy.nvim`?](#faq-2)
 - [Can I use `nvim-treesitter` for my `chezmoi-template`?](#faq-3)
+- [Why is Windows support difficult?](#faq-4)
 
 ### <a id="faq-1"></a> How can I make it work even if my chezmoi source directory isn't the default path?
 
@@ -230,6 +240,10 @@ require('nvim-treesitter.configs').setup({
   },
 })
 ```
+
+### <a id="faq-4"></a> Why is Windows support difficult?
+
+The plugin should work on Windows, but the surrounding ecosystem makes it hard to promise. Windows comes in several flavours that behave differently — native Windows, WSL, Git Bash and MSYS2 — and on top of that the plugin manager, the shell and the `chezmoi` binary itself can each differ in subtle ways (for example, path separators and how `chezmoi edit`'s temporary files are created). Covering every combination would require a test matrix that is impractical to maintain, so Windows is supported on a best-effort basis rather than guaranteed. If you hit a problem on Windows, the [`g:chezmoi#detect_ignore_pattern`](#options) escape hatch lets you disable detection for the affected paths.
 
 # Contributing
 
