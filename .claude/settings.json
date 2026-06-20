@@ -1,6 +1,6 @@
 {
   "attribution": {
-    "sessionUrl": ""
+    "sessionUrl": false
   },
   "hooks": {
     "SessionStart": [
